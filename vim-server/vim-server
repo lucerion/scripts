@@ -1,0 +1,16 @@
+#!/usr/bin/env ruby
+
+servers = `vim --serverlist`.split("\n")
+if servers.one?
+  server_name = servers.first
+else
+  while server_name.to_s.empty?
+    print 'Server name: '
+    server_name = STDIN.gets.chomp
+  end
+end
+
+args = ARGV.dup
+args.unshift('--remote-tab-silent') if servers.include?(server_name.upcase)
+
+system "vim --servername #{server_name} #{args.join(' ')}"
