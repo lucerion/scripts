@@ -1,0 +1,45 @@
+#!/usr/bin/env ruby
+
+require 'optparse'
+require 'yaml'
+
+DEFAULT_CONFIG = File.expand_path('~/.config/starter.yml')
+CURRENT_DIR = Dir.pwd
+
+def options_parser(options)
+  OptionParser.new('Usage: start') do |option|
+    option.on('-c', '--config FILE', "config file. Default: #{DEFAULT_CONFIG}") do |value|
+      options[:config] = File.expand_path(value)
+    end
+    option.on_tail('--help', 'display a usage message') do
+      puts option
+      exit
+    end
+  end
+end
+
+def parse_options!(args = ARGV)
+  { config: DEFAULT_CONFIG }.tap do |options|
+    options_parser(options).parse!(args)
+    config = options[:config]
+    raise "Config '#{config}' not found" unless File.exist?(config)
+  end
+end
+
+def target_dir?(path)
+  Regexp.new(File.expand_path(path)) =~ CURRENT_DIR
+end
+
+def exec_command(command)
+  case command
+  when String
+    exec command
+  when Array
+    exec command.join(' && ')
+  end
+end
+
+config = parse_options![:config]
+YAML.load_file(config).each do |path, command|
+  exec_command(command) if target_dir?(path)
+end

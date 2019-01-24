@@ -1,0 +1,4 @@
+# /path/to/dir: command
+# /path/to/another/dir:
+#   - first_command
+#   - second_command
