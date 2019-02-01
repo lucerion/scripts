@@ -10,7 +10,7 @@ CURRENT_DIR = Dir.pwd
 
 def options_parser(options)
   OptionParser.new('Usage: start') do |option|
-    option.on('-c', '--config FILE', "config file. Default: #{DEFAULT_CONFIG}") do |value|
+    option.on('-c', '--config FILE', "config file. Default: #{DEFAULT_OPTIONS[:config]}") do |value|
       options[:config] = File.expand_path(value)
     end
     option.on_tail('--help', 'display a usage message') do
@@ -21,7 +21,7 @@ def options_parser(options)
 end
 
 def parse_options!(args = ARGV)
-  DEFAULT_OPTIONS.tap do |options|
+  DEFAULT_OPTIONS.dup.tap do |options|
     options_parser(options).parse!(args)
 
     config = options.fetch(:config)
