@@ -1,0 +1,133 @@
+#!/usr/bin/env ruby
+
+require 'optparse'
+require 'yaml'
+
+DEFAULT_OPTIONS = {
+  config_file: File.expand_path('~/.config/open_vpn.yml'),
+  bin: File.expand_path('/usr/sbin/openvpn')
+}.freeze
+
+COMMANDS = {
+  start: 'start',
+  stop: 'stop',
+  restart: 'restart',
+  status: 'status'
+}.freeze
+
+START_COMMAND = 'sudo %<bin>s --config %<config>s --writepid %<pid_file>s --daemon'.freeze
+PID_FILE = '/var/run/open_vpn%<postfix>s.pid'.freeze
+
+MESSAGES = {
+  no_binary: 'Binary "%s" not found or not executable!',
+  no_config: 'Config "%s" not found!',
+  no_target_config: 'Config "%<config>s" for target "%<target>s" not found!',
+  running: 'OpenVPN is running',
+  not_running: 'OpenVPN is not running'
+}.freeze
+
+def options_parser(options)
+  OptionParser.new('Usage: open_vpn {start|stop|restart|status} target [OPTIONS]') do |option|
+    option.on('-c', '--config FILE', "config file. Default: #{DEFAULT_OPTIONS[:config_file]}") do |value|
+      options[:config_file] = File.expand_path(value)
+    end
+    option.on('--bin FILE', "executable file. Default: #{DEFAULT_OPTIONS[:bin]}") do |value|
+      options[:bin] = File.expand_path(value)
+    end
+    option.on_tail('--help', 'display a usage message') do
+      puts option
+      exit
+    end
+  end
+end
+
+def parse_options!(args = ARGV)
+  command, target = args.reject { |arg| arg.start_with?('-') }
+
+  DEFAULT_OPTIONS.dup.tap do |options|
+    options_parser(options).parse!(args)
+
+    options[:command] = command
+    options[:target] = target
+  end
+end
+
+def error(message, options)
+  raise format(MESSAGES[message], options)
+end
+
+def bin(options)
+  options.fetch(:bin).tap do |bin|
+    error(:binary_not_found, bin) unless File.executable?(bin)
+  end
+end
+
+def config(options)
+  target = options.fetch(:target)
+  return target if target_config?(target)
+
+  config_file = options.fetch(:config_file)
+  error(:no_config, config_file) unless File.exist?(config_file)
+
+  (YAML.load_file(config_file) || {}).fetch(target, '').tap do |config|
+    error(:no_target_config, config: config, target: target) unless File.exist?(config)
+  end
+end
+
+def target_config?(target)
+  File.exist?(target)
+end
+
+def pid_file(options)
+  target = options.fetch(:target)
+  postfix = target_config?(target) ? '' : ".#{target}"
+  format(PID_FILE, postfix: postfix)
+end
+
+def pid(pid_file)
+  return unless File.exist?(pid_file)
+
+  pid = File.read(pid_file).strip
+  pid.to_i unless pid.empty?
+end
+
+def runned?(pid)
+  return false unless pid
+
+  Process.getpgid(pid)
+  true
+rescue Errno::ESRCH
+  false
+end
+
+def start(options)
+  exec format(START_COMMAND, bin: bin(options), config: config(options), pid_file: pid_file(options))
+end
+
+def stop(options)
+  pid_file = pid_file(options)
+  pid = pid(pid_file)
+
+  return unless runned?(pid)
+
+  `sudo kill #{pid}`
+  `sudo rm #{pid_file}`
+end
+
+def restart(options)
+  stop(options)
+  start(options)
+end
+
+def status(options)
+  pid = pid(pid_file(options))
+  puts runned?(pid) ? MESSAGES[:running] : MESSAGES[:not_running]
+end
+
+def help
+  parse_options!(%w[--help])
+end
+
+options = parse_options!
+command = options[:command]
+COMMANDS.value?(command) ? send(command, options) : help
