@@ -3,7 +3,9 @@
 require 'optparse'
 require 'yaml'
 
-DEFAULT_CONFIG = File.expand_path('~/.config/starter.yml')
+DEFAULT_OPTIONS = {
+  config: File.expand_path('~/.config/starter.yml')
+}.freeze
 CURRENT_DIR = Dir.pwd
 
 def options_parser(options)
@@ -19,9 +21,10 @@ def options_parser(options)
 end
 
 def parse_options!(args = ARGV)
-  { config: DEFAULT_CONFIG }.tap do |options|
+  DEFAULT_OPTIONS.tap do |options|
     options_parser(options).parse!(args)
-    config = options[:config]
+
+    config = options.fetch(:config)
     raise "Config '#{config}' not found" unless File.exist?(config)
   end
 end
@@ -39,7 +42,6 @@ def exec_command(command)
   end
 end
 
-config = parse_options![:config]
-YAML.load_file(config).each do |path, command|
+YAML.load_file(parse_options![:config]).each do |path, command|
   exec_command(command) if target_dir?(path)
 end
