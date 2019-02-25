@@ -10,7 +10,7 @@ install:
 		chmod u+x $(BIN_PATH)/vim-server
 
 uninstall:
-		rm $(BIN_PATH)/vim-server
+		rm -f $(BIN_PATH)/vim-server
 
 setup:
 		touch $(VIFM_LOCAL_MAPPINGS)
@@ -20,3 +20,5 @@ setup:
 
 clean:
 		sed -i '/vim-server/d' $(VIFM_LOCAL_MAPPINGS) $(LOCAL_ALIASES)
+
+purge: uninstall clean
