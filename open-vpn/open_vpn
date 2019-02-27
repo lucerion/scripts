@@ -4,8 +4,8 @@ require 'optparse'
 require 'yaml'
 
 DEFAULT_OPTIONS = {
-  config_file: File.expand_path('~/.config/open_vpn.yml'),
-  bin: File.expand_path('/usr/sbin/openvpn')
+  config: File.expand_path('~/.config/open_vpn.yml'),
+  bin: File.expand_path('/usr/sbi_filen/openvpn')
 }.freeze
 
 COMMANDS = {
@@ -28,8 +28,8 @@ MESSAGES = {
 
 def options_parser(options)
   OptionParser.new('Usage: open_vpn {start|stop|restart|status} target [OPTIONS]') do |option|
-    option.on('-c', '--config FILE', "config file. Default: #{DEFAULT_OPTIONS[:config_file]}") do |value|
-      options[:config_file] = File.expand_path(value)
+    option.on('-c', '--config FILE', "config file. Default: #{DEFAULT_OPTIONS[:config]}") do |value|
+      options[:config] = File.expand_path(value)
     end
     option.on('--bin FILE', "executable file. Default: #{DEFAULT_OPTIONS[:bin]}") do |value|
       options[:bin] = File.expand_path(value)
@@ -66,7 +66,7 @@ def config(options)
   target = options.fetch(:target)
   return target if target_config?(target)
 
-  config_file = options.fetch(:config_file)
+  config_file = options.fetch(:config)
   error(:no_config, config_file) unless File.exist?(config_file)
 
   (YAML.load_file(config_file) || {}).fetch(target, '').tap do |config|
