@@ -1,16 +1,34 @@
 #!/usr/bin/env ruby
 
-servers = `vim --serverlist`.split("\n")
-if servers.one?
-  server_name = servers.first
-else
-  while server_name.to_s.empty?
-    print 'Server name: '
-    server_name = STDIN.gets.chomp
-  end
+OPEN_IN_TAB_OPTION = '--remote-tab-silent'
+
+def server_list
+ `vim --serverlist`.split("\n")
 end
 
-args = ARGV.dup
-args.unshift('--remote-tab-silent') if servers.include?(server_name.upcase)
+def new_server
+  server = nil
+  while server.to_s.empty?
+    print 'Server name: '
+    server = STDIN.gets.chomp
+  end
+  server
+end
 
-system "vim --servername #{server_name} #{args.join(' ')}"
+def open_in_tab(args)
+  args.unshift(OPEN_IN_TAB_OPTION)
+end
+
+def server_runned?(server, servers)
+ servers.include?(server.upcase)
+end
+
+def file_not_passed?(args)
+  args.one? && args.include?(OPEN_IN_TAB_OPTION)
+end
+
+servers = server_list
+server = servers.one? ? servers.first : new_server
+args = ARGV.dup
+open_in_tab(args) if server_runned?(server, servers)
+system "vim --servername #{server} #{args.join(' ')}" unless file_not_passed?(args)
