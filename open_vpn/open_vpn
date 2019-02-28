@@ -5,7 +5,7 @@ require 'yaml'
 
 DEFAULT_OPTIONS = {
   config: File.expand_path('~/.config/open_vpn.yml'),
-  bin: File.expand_path('/usr/sbi_filen/openvpn')
+  bin: File.expand_path('/usr/sbin/openvpn')
 }.freeze
 
 COMMANDS = {
@@ -27,7 +27,7 @@ MESSAGES = {
 }.freeze
 
 def options_parser(options)
-  OptionParser.new('Usage: open_vpn {start|stop|restart|status} DESTINATION [OPTIONS]') do |option|
+  OptionParser.new('open_vpn start|stop|restart|status DESTINATION|vpn_config [OPTION]') do |option|
     option.on('-c', '--config FILE', "config file. Default: #{DEFAULT_OPTIONS[:config]}") do |value|
       options[:config] = File.expand_path(value)
     end
