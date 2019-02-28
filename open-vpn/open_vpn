@@ -21,13 +21,13 @@ PID_FILE = '/var/run/open_vpn%<postfix>s.pid'.freeze
 MESSAGES = {
   no_binary: 'Binary "%s" not found or not executable!',
   no_config: 'Config "%s" not found!',
-  no_target_config: 'Config "%<config>s" for target "%<target>s" not found!',
+  no_destination_config: 'Config "%<config>s" for destination "%<destination>s" not found!',
   running: 'OpenVPN is running',
   not_running: 'OpenVPN is not running'
 }.freeze
 
 def options_parser(options)
-  OptionParser.new('Usage: open_vpn {start|stop|restart|status} target [OPTIONS]') do |option|
+  OptionParser.new('Usage: open_vpn {start|stop|restart|status} DESTINATION [OPTIONS]') do |option|
     option.on('-c', '--config FILE', "config file. Default: #{DEFAULT_OPTIONS[:config]}") do |value|
       options[:config] = File.expand_path(value)
     end
@@ -42,18 +42,18 @@ def options_parser(options)
 end
 
 def parse_options!(args = ARGV)
-  command, target = args.reject { |arg| arg.start_with?('-') }
+  command, destination = args.reject { |arg| arg.start_with?('-') }
 
   DEFAULT_OPTIONS.dup.tap do |options|
     options_parser(options).parse!(args)
 
     options[:command] = command
-    options[:target] = target
+    options[:destination] = destination
   end
 end
 
-def error(message, options)
-  raise format(MESSAGES[message], options)
+def error(type, options)
+  raise format(MESSAGES[type], options)
 end
 
 def bin(options)
@@ -63,24 +63,24 @@ def bin(options)
 end
 
 def config(options)
-  target = options.fetch(:target)
-  return target if target_config?(target)
+  destination = options.fetch(:destination)
+  return destination if destination_option_config?(destination)
 
   config_file = options.fetch(:config)
   error(:no_config, config_file) unless File.exist?(config_file)
 
-  (YAML.load_file(config_file) || {}).fetch(target, '').tap do |config|
-    error(:no_target_config, config: config, target: target) unless File.exist?(config)
+  (YAML.load_file(config_file) || {}).fetch(destination, '').tap do |config|
+    error(:no_destination_config, config: config, destination: destination) unless File.exist?(config)
   end
 end
 
-def target_config?(target)
-  File.exist?(target)
+def destination_option_config?(destination)
+  File.exist?(destination)
 end
 
 def pid_file(options)
-  target = options.fetch(:target)
-  postfix = target_config?(target) ? '' : ".#{target}"
+  destination = options.fetch(:destination)
+  postfix = destination_option_config?(destination) ? '' : ".#{destination}"
   format(PID_FILE, postfix: postfix)
 end
 
