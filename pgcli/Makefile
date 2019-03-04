@@ -9,7 +9,7 @@ install:
 		chmod u+x $(BIN_PATH)/pgcli
 
 uninstall:
-		rm $(BIN_PATH)/pgcli
+		rm -f $(BIN_PATH)/pgcli
 
 config:
 		([ ! -f $(CONFIG_PATH)/pgcli.yml ] && cp `pwd`/pgcli.yml $(CONFIG_PATH)) || echo "config already exists"
