@@ -9,7 +9,7 @@ install:
 		chmod u+x $(BIN_PATH)/open_vpn
 
 uninstall:
-		rm $(BIN_PATH)/open_vpn
+		rm -f $(BIN_PATH)/open_vpn
 
 config:
 		([ ! -f $(CONFIG_PATH)/open_vpn.yml ] && cp `pwd`/open_vpn.yml $(CONFIG_PATH)) || echo "config already exists"
