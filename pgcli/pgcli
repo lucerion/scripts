@@ -1,0 +1,78 @@
+#!/usr/bin/env ruby
+
+require 'optparse'
+require 'yaml'
+
+DEFAULT_OPTIONS = {
+  config: File.expand_path('~/.config/pgcli.yml')
+}.freeze
+
+def options_parser(options = {})
+  OptionParser.new('Usage: pgcli DESTINATION [OPTION]') do |option|
+    option.on('-c', '--config FILE', "config file. Default: #{DEFAULT_OPTIONS[:config]}") do |value|
+      options[:config] = File.expand_path(value)
+    end
+    option.on_tail('--help', 'display a usage message') do
+      puts option
+      exit
+    end
+  end
+end
+
+def help
+  options_parser.parse!(%w[--help])
+end
+
+def parse_options!(args = ARGV)
+  destination = args.find { |arg| !arg.start_with?('-') }
+
+  DEFAULT_OPTIONS.dup.tap do |options|
+    options_parser(options).parse!(args)
+    options[:destination] = destination
+  end
+end
+
+def validate_options!(options)
+  config = options[:config]
+  raise "Config '#{config}' not found!" unless File.exist?(config)
+
+  help unless options[:destination]
+end
+
+def parse_config(options)
+  YAML.load_file(options[:config])
+end
+
+def validate_config!(config, options)
+  destination = options[:destination]
+  raise "Options for '#{destination}' not found!" unless config[destination]
+end
+
+def command_options(config, options)
+  destination = options[:destination]
+  destination_config = config[destination]
+
+  return [
+    destination_config['host'],
+    destination_config['port'],
+    destination_config['username'],
+    destination_config['database'],
+    destination_config['password']
+  ]
+end
+
+def command(config, options)
+  host, port, username, database, password = command_options(config, options)
+
+  command = 'psql '
+  command << "-h #{host} " if host
+  command << "-p #{port} " if port
+  command << "-U #{username} " if username
+  command << "-d #{database}" if database
+
+  password ? "PGPASSWORD=#{password} #{command}" : command
+end
+
+options = parse_options!.tap { |parsed_options| validate_options!(parsed_options) }
+config = parse_config(options).tap { |parsed_config| validate_config!(parsed_config, options) }
+system command(config, options)
