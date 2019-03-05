@@ -12,4 +12,7 @@ uninstall:
 		rm -f $(BIN_PATH)/open_vpn
 
 config:
-		([ ! -f $(CONFIG_PATH)/open_vpn.yml ] && cp `pwd`/open_vpn.yml $(CONFIG_PATH)) || echo "config already exists"
+		cp -i `pwd`/open_vpn.yml $(CONFIG_PATH)
+
+purge: uninstall
+		rm -fi $(CONFIG_PATH)/open_vpn.yml

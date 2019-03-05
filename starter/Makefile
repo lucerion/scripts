@@ -12,4 +12,7 @@ uninstall:
 		rm -f $(BIN_PATH)/start
 
 config:
-		([ ! -f $(CONFIG_PATH)/starter.yml ] && cp `pwd`/starter.yml $(CONFIG_PATH)) || echo "config already exists"
+		cp -i `pwd`/starter.yml $(CONFIG_PATH)
+
+purge: uninstall
+		rm -fi $(CONFIG_PATH)/open_vpn.yml

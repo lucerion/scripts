@@ -12,4 +12,7 @@ uninstall:
 		rm -f $(BIN_PATH)/pgcli
 
 config:
-		([ ! -f $(CONFIG_PATH)/pgcli.yml ] && cp `pwd`/pgcli.yml $(CONFIG_PATH)) || echo "config already exists"
+		cp -i `pwd`/pgcli.yml $(CONFIG_PATH)
+
+purge: uninstall
+		rm -fi $(CONFIG_PATH)/open_vpn.yml

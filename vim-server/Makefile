@@ -18,7 +18,5 @@ setup:
 		touch $(LOCAL_ALIASES)
 		echo "alias vs='vim-server'" >> $(LOCAL_ALIASES)
 
-clean:
-		sed -i '/vim-server/d' $(VIFM_LOCAL_MAPPINGS) $(LOCAL_ALIASES)
-
-purge: uninstall clean
+purge: uninstall
+	sed -i '/vim-server/d' $(VIFM_LOCAL_MAPPINGS) $(LOCAL_ALIASES)
