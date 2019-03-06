@@ -1,18 +1,8 @@
-.DEFAULT_GOAL := install
+SCRIPT = starter
 
-BIN_PATH ?= ~/.local/bin
-CONFIG_PATH ?= ~/.config
+include ../Makefile
 
 install:
-		mkdir -p $(BIN_PATH)
-		cp `pwd`/starter $(BIN_PATH)/start
-		chmod u+x $(BIN_PATH)/start
-
-uninstall:
-		rm -f $(BIN_PATH)/start
-
-config:
-		cp -i `pwd`/starter.yml $(CONFIG_PATH)
-
-purge: uninstall
-		rm -fi $(CONFIG_PATH)/open_vpn.yml
+		mkdir -p $(BIN_DIR)
+		cp $(CURRENT_DIR)/$(SCRIPT) $(BIN_DIR)/start
+		chmod u+x $(BIN_DIR)/start
