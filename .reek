@@ -1,0 +1,11 @@
+UtilityFunction:
+  enabled: false
+
+FeatureEnvy:
+  enabled: false
+
+NestedIterators:
+  exclude: ['options_parser']
+
+TooManyStatements:
+  exclude: ['options_parser']
