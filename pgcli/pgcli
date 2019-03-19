@@ -52,7 +52,7 @@ def command_options(config, options)
   destination = options[:destination]
   destination_config = config[destination]
 
-  return [
+  [
     destination_config['host'],
     destination_config['port'],
     destination_config['username'],

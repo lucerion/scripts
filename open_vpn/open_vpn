@@ -56,7 +56,8 @@ def parse_options!(args = ARGV)
 end
 
 def validate_options!(options)
-  help unless options[:command] && options[:destination] && COMMANDS.include?(options[:command])
+  command = options[:command]
+  help unless command && options[:destination] && COMMANDS.include?(command)
 
   bin = options[:bin]
   error(:no_binary, bin) unless File.executable?(bin)
