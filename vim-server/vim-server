@@ -1,34 +1,134 @@
 #!/usr/bin/env ruby
 
-OPEN_IN_TAB_OPTION = '--remote-tab-silent'
+require 'optparse'
+
+DEFAULT_OPTIONS = {
+  interactive: false,
+  one_server_connect: true
+}.freeze
+SERVER_LIST_MENU_ITEM = '%<index>i: %<server>s'.freeze
+NEW_SERVER_MENU_ITEM_DESCRIPTION = 'Start new (default)'.freeze
+SELECT_SERVER_MESSAGE = 'Input server number [%s]: '.freeze
+NEW_SERVER_INDEX = 0
+OPEN_IN_TAB_OPTION = '--remote-tab-silent'.freeze
+COMMAND = 'vim --servername %<server_name>s %<args>s'.freeze
+
+def options_parser(options = {})
+  OptionParser.new('vim-server [OPTION] [FILE...]') do |option|
+    option.on('--interactive', 'interactive mode', "Default: #{DEFAULT_OPTIONS[:interactive]}") do |value|
+      options[:interactive] = value
+    end
+    option.on('--[no-]one-server-connect', 'connect automatically if only one server runned.',
+              "It's not allowed in 'interactive' mode.", "Default: #{DEFAULT_OPTIONS[:one_server_connect]}") do |value|
+      options[:one_server_connect] = value
+    end
+    option.on_tail('--help', 'display a usage message') do
+      puts option
+      exit
+    end
+  end
+end
+
+def parse_options!(args = ARGV)
+  DEFAULT_OPTIONS.dup.tap { |options| options_parser(options).parse!(args) }
+end
 
 def server_list
- `vim --serverlist`.split("\n")
+  `vim --serverlist`.split("\n")
 end
 
-def new_server
-  server = nil
-  while server.to_s.empty?
+def non_interactive_mode(options)
+  open_server(server_list.first) if options[:one_server_connect] && server_list.one?
+
+  server_name = input_server_name
+  open_server(server_name) if server_runned?(server_name)
+
+  start_server(server_name)
+end
+
+def open_server(server_name)
+  abort 'File is not provided!' unless file_arg_passed?
+  abort 'Server is not runned!' unless server_runned?(server_name)
+
+  args = ARGV.dup.unshift(OPEN_IN_TAB_OPTION)
+  start_server(server_name, args)
+end
+
+def start_server(server_name, args = ARGV)
+  system format(COMMAND, server_name: server_name, args: args.join(' '))
+  exit
+end
+
+def start_new_server
+  start_server(input_server_name)
+end
+
+def input_server_name
+  server_name = nil
+
+  loop do
     print 'Server name: '
-    server = STDIN.gets.chomp
+    server_name = STDIN.gets.strip
+    break unless server_name.empty?
   end
-  server
+
+  server_name
 end
 
-def open_in_tab(args)
-  args.unshift(OPEN_IN_TAB_OPTION)
+def interactive_mode
+  print_menu
+  interactive_start_server
 end
 
-def server_runned?(server, servers)
- servers.include?(server.upcase)
+def print_menu
+  print_menu_item(NEW_SERVER_INDEX, NEW_SERVER_MENU_ITEM_DESCRIPTION)
+  server_list.each_with_index { |server, index| print_menu_item(index + 1, server) }
 end
 
-def file_not_passed?(args)
-  args.one? && args.include?(OPEN_IN_TAB_OPTION)
+def print_menu_item(index, server)
+  puts format(SERVER_LIST_MENU_ITEM, index: index, server: server)
 end
 
-servers = server_list
-server = servers.one? ? servers.first : new_server
-args = ARGV.dup
-open_in_tab(args) if server_runned?(server, servers)
-system "vim --servername #{server} #{args.join(' ')}" unless file_not_passed?(args)
+def interactive_start_server
+  selected_server_index = select_server_index
+  start_new_server?(selected_server_index) ? start_new_server : open_server_by_index(selected_server_index)
+end
+
+def select_server_index
+  last_server_index = server_list.size
+  servers_indexes = 0..last_server_index
+  selected_server_index = nil
+
+  loop do
+    print select_server_message(last_server_index)
+    selected_server_index = STDIN.gets.to_i
+    break if servers_indexes.include?(selected_server_index)
+  end
+
+  selected_server_index
+end
+
+def start_new_server?(selected_server_index)
+  selected_server_index == NEW_SERVER_INDEX
+end
+
+def open_server_by_index(selected_server_index)
+  server_name = server_list[selected_server_index - 1]
+  open_server(server_name)
+end
+
+def select_server_message(last_server_index)
+  server_index = last_server_index == NEW_SERVER_INDEX ? NEW_SERVER_INDEX : "#{NEW_SERVER_INDEX}-#{last_server_index}"
+  format(SELECT_SERVER_MESSAGE, server_index)
+end
+
+def server_runned?(server_name)
+  server_list.include?(server_name.upcase)
+end
+
+def file_arg_passed?(args = ARGV)
+  args.any? { |arg| !arg.start_with?('--') }
+end
+
+options = parse_options!
+options[:interactive] ? interactive_mode : non_interactive_mode(options)
