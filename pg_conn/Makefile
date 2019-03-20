@@ -1,3 +1,3 @@
-SCRIPT = pgcli
+SCRIPT = pg_conn
 
 include ../Makefile
