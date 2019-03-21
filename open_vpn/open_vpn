@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
 
 require 'optparse'
 require 'yaml'
@@ -10,8 +11,8 @@ DEFAULT_OPTIONS = {
 
 COMMANDS = %w[start stop restart status].freeze
 
-START_COMMAND = 'sudo %<bin>s --config %<vpn_config>s --writepid %<pid_file>s --daemon'.freeze
-PID_FILE = '/var/run/open_vpn%<postfix>s.pid'.freeze
+START_COMMAND = 'sudo %<bin>s --config %<vpn_config>s --writepid %<pid_file>s --daemon'
+PID_FILE = '/var/run/open_vpn%<postfix>s.pid'
 
 ERRORS = {
   no_binary: 'Binary "%s" not found or not executable!',
@@ -25,11 +26,11 @@ MESSAGES = {
 
 def options_parser(options = {})
   OptionParser.new('open_vpn start|stop|restart|status DESTINATION [OPTION]') do |option|
-    option.on('-c', '--config FILE', "config file. Default: #{DEFAULT_OPTIONS[:config]}") do |value|
-      options[:config] = File.expand_path(value)
+    option.on('-c', '--config FILE', "config file. Default: #{DEFAULT_OPTIONS[:config]}") do |config_path|
+      options[:config] = File.expand_path(config_path)
     end
-    option.on('--bin FILE', "executable file. Default: #{DEFAULT_OPTIONS[:bin]}") do |value|
-      options[:bin] = File.expand_path(value)
+    option.on('--bin FILE', "executable file. Default: #{DEFAULT_OPTIONS[:bin]}") do |bin_path|
+      options[:bin] = File.expand_path(bin_path)
     end
     option.on_tail('--help', 'display a usage message') do
       puts option

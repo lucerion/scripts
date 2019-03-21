@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
 
 require 'optparse'
 
@@ -6,12 +7,12 @@ DEFAULT_OPTIONS = {
   interactive: false,
   one_server_connect: true
 }.freeze
-SERVER_LIST_MENU_ITEM = '%<index>i: %<server>s'.freeze
-NEW_SERVER_MENU_ITEM_DESCRIPTION = 'Start new (default)'.freeze
-SELECT_SERVER_MESSAGE = 'Input server number [%s]: '.freeze
+SERVER_LIST_MENU_ITEM = '%<index>i: %<server>s'
+NEW_SERVER_MENU_ITEM_DESCRIPTION = 'Start new (default)'
+SELECT_SERVER_MESSAGE = 'Input server number [%s]: '
 NEW_SERVER_INDEX = 0
-OPEN_IN_TAB_OPTION = '--remote-tab-silent'.freeze
-COMMAND = 'vim --servername %<server_name>s %<args>s'.freeze
+OPEN_IN_TAB_OPTION = '--remote-tab-silent'
+COMMAND = 'vim --servername %<server_name>s %<args>s'
 
 def options_parser(options = {})
   OptionParser.new('vim_server [OPTION] [FILE...]') do |option|
