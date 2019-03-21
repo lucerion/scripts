@@ -1,0 +1,14 @@
+#!/usr/bin/env sh
+
+SHELL_CONFIG=${SHELL_CONFIG:-$HOME/.shrc.local}
+
+if [ ! -f $SHELL_CONFIG ]; then
+  echo "# vi: filetype=sh\n" >> $SHELL_CONFIG
+fi
+
+for path in $@; do
+  echo "$path" |
+  sed "s|~|$HOME|" |
+  sed "s|$HOME|\$PATH:\$HOME|" |
+  xargs -I {} echo "export PATH=\"{}\"" >> $SHELL_CONFIG
+done
