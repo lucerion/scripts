@@ -1,0 +1,39 @@
+#!/usr/bin/env ruby
+
+DEFAULT_LOCAL_ALIASES = '~/.aliases.local'
+LOCAL_ALIASES = File.expand_path(ENV['LOCAL_ALIASES'] || DEFAULT_LOCAL_ALIASES)
+
+COMMANDS = {
+  add: "add",
+  delete: "del",
+  change: "chg"
+}
+
+USAGE_MESSAGE = <<~USAGE
+  Usage: als add name value
+         als del name
+USAGE
+
+def add_alias(name)
+  value = ARGV[2..-1].join(' ')
+  File.open(LOCAL_ALIASES, 'a') { |file| file.puts "alias #{name}='#{value}'" }
+end
+
+def delete_alias(name)
+  lines = File.readlines(LOCAL_ALIASES).select { |line| !line.start_with?("alias #{name}=") }
+  File.open(LOCAL_ALIASES, 'w') { |file| file.write(lines.join()) }
+end
+
+command, name = ARGV
+
+case command
+when COMMANDS[:add]
+  add_alias(name)
+when COMMANDS[:delete]
+  delete_alias(name)
+when COMMANDS[:change]
+  delete_alias(name)
+  add_alias(name)
+else
+  puts USAGE_MESSAGE
+end

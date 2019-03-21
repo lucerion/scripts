@@ -1,0 +1,3 @@
+SCRIPT = als
+
+include ../Makefile
