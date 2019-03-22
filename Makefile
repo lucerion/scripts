@@ -9,6 +9,10 @@ SCRIPT := $(shell read -p "Script: " SCRIPT_NAME; echo $$SCRIPT_NAME)
 CURRENT_DIR = $(shell pwd)/$(SCRIPT)
 endif
 
+ifndef SCRIPT_CONF
+SCRIPT_CONF = $(SCRIPT).yml
+endif
+
 install:
 		mkdir -p $(BIN_DIR)
 		cp $(CURRENT_DIR)/$(SCRIPT) $(BIN_DIR)
@@ -18,7 +22,7 @@ uninstall:
 		rm -f $(BIN_DIR)/$(SCRIPT)
 
 config:
-		cp -i $(CURRENT_DIR)/$(SCRIPT).yml $(CONFIG_DIR)
+		cp -i $(CURRENT_DIR)/$(SCRIPT_CONF) $(CONFIG_DIR)
 
 purge: uninstall
-		rm -i $(CONFIG_DIR)/$(SCRIPT).yml
+		rm -i $(CONFIG_DIR)/$(SCRIPT_CONF)
