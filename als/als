@@ -1,8 +1,7 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-DEFAULT_LOCAL_ALIASES = '~/.aliases.local'
-LOCAL_ALIASES = File.expand_path(ENV['LOCAL_ALIASES'] || DEFAULT_LOCAL_ALIASES)
+ALIASES_FILE = File.expand_path(ENV.fetch('ALIASES_FILE', '~/.bashrc'))
 
 COMMANDS = {
   add: 'add',
@@ -17,12 +16,12 @@ USAGE
 
 def add_alias(name)
   value = ARGV[2..-1].join(' ')
-  File.open(LOCAL_ALIASES, 'a') { |file| file.puts "alias #{name}='#{value}'" }
+  File.open(ALIASES_FILE, 'a') { |file| file.puts "alias #{name}='#{value}'" }
 end
 
 def delete_alias(name)
-  lines = File.readlines(LOCAL_ALIASES).reject { |line| line.start_with?("alias #{name}=") }
-  File.open(LOCAL_ALIASES, 'w') { |file| file.write(lines.join) }
+  lines = File.readlines(ALIASES_FILE).reject { |line| line.start_with?("alias #{name}=") }
+  File.open(ALIASES_FILE, 'w') { |file| file.write(lines.join) }
 end
 
 command, name = ARGV

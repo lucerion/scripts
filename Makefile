@@ -9,13 +9,15 @@ SCRIPT := $(shell read -p "Script: " SCRIPT_NAME; echo $$SCRIPT_NAME)
 CURRENT_DIR = $(shell pwd)/$(SCRIPT)
 endif
 
+CURRENT_SCRIPT = $(CURRENT_DIR)/$(SCRIPT)
+
 ifndef SCRIPT_CONF
 SCRIPT_CONF = $(SCRIPT).yml
 endif
 
 install:
 		mkdir -p $(BIN_DIR)
-		cp $(CURRENT_DIR)/$(SCRIPT) $(BIN_DIR)
+		cp $(CURRENT_SCRIPT) $(BIN_DIR)
 		chmod u+x $(BIN_DIR)/$(SCRIPT)
 
 uninstall:

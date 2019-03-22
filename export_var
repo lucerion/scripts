@@ -1,0 +1,9 @@
+#!/usr/bin/env sh
+
+EXPORT_DEFAULT_FILE="$HOME/.shrc.local"
+
+EXPORT_VAR_NAME=$1
+EXPORT_VAR_VALUE=$(echo "$2" | sed "s|$HOME|\$HOME|")
+EXPORT_VAR_FILE=${3:-$EXPORT_DEFAULT_FILE}
+
+echo "export $EXPORT_VAR_NAME=\"$EXPORT_VAR_VALUE\"" >> $EXPORT_VAR_FILE
