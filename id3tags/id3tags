@@ -1,0 +1,80 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require 'optparse'
+require 'yaml'
+
+DEFAULT_OPTIONS = {
+  config: File.expand_path('./id3tags.yml'),
+  bin: File.expand_path('/usr/bin/id3v2')
+}.freeze
+
+OPTIONS = {
+  'artist' => '-a',
+  'song' => '-t',
+  'album' => '-A'
+}.freeze
+
+def options_parser(options = {})
+  OptionParser.new('Usage: id3tags [OPTION]') do |option|
+    option.on('-c', '--change CONFIG_FILE', 'change tags config.',
+              "Default: #{DEFAULT_OPTIONS[:config]}") do |path|
+      options[:config] = File.expand_path(path)
+    end
+    option.on('-d', '--delete [FILE...]', Array, 'delete tags for files.',
+              'Should be separated by a comma: /path/to/file/1.mp3,/path/to/file/2.mp3') do |files|
+      options[:files] = files
+    end
+    option.on('--bin FILE', "executable file. Default: #{DEFAULT_OPTIONS[:bin]}") do |value|
+      options[:bin] = File.expand_path(value)
+    end
+    option.on_tail('-h', '--help', 'display a usage message') do
+      puts option
+      exit
+    end
+  end
+end
+
+def parse_options!(args = ARGV)
+  DEFAULT_OPTIONS.dup.tap { |options| options_parser(options).parse!(args) }
+end
+
+def options(tags)
+  tags.each_with_object([]) do |(option, value), memo|
+    memo << "#{OPTIONS[option]} '#{value}'" if OPTIONS.key?(option)
+  end
+end
+
+def change_tags(bin, config)
+  return unless file_exist?(config)
+
+  config_file = YAML.load_file(config)
+  return unless config_file
+
+  config_file.each do |path, tags|
+    `#{bin} #{options(tags).join(' ')} #{path}` if file_exist?(path)
+  end
+end
+
+def delete_tags(bin, files)
+  return unless files&.all?(&method(:file_exist?))
+
+  `#{bin} -D #{files.join(' ')}`
+end
+
+def bin_path(path)
+  file_exist?(path) && File.executable?(path) ? path : DEFAULT_OPTIONS[:bin]
+end
+
+def file_exist?(file)
+  return false unless file
+
+  File.exist?(File.expand_path(file))
+end
+
+parse_options!.values_at(:bin, :config, :files).tap do |bin, config, files|
+  bin = bin_path(bin)
+
+  change_tags(bin, config)
+  delete_tags(bin, files)
+end
