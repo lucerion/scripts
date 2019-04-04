@@ -5,7 +5,7 @@ require 'optparse'
 require 'yaml'
 
 DEFAULT_OPTIONS = {
-  config: File.expand_path('~/.config/pg_conn.yml')
+  config: File.expand_path('~/.config/pgconn.yml')
 }.freeze
 
 OPTIONS = {
@@ -16,7 +16,7 @@ OPTIONS = {
 }.freeze
 
 def options_parser(options = {})
-  OptionParser.new('Usage: pg_conn DESTINATION [OPTION]') do |option|
+  OptionParser.new('Usage: pgconn DESTINATION [OPTION]') do |option|
     option.on('-c', '--config FILE', "config file. Default: #{DEFAULT_OPTIONS[:config]}") do |value|
       options[:config] = File.expand_path(value)
     end
