@@ -1,0 +1,3 @@
+SCRIPT = orm
+
+include ../Makefile

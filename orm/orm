@@ -1,0 +1,56 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require 'yaml'
+
+CONFIG_FILE = File.expand_path(ENV.fetch('CONFIG_FILE', '~/.config/orm.yml'))
+
+JAVASCRIPT_BIN_DIR = ENV.fetch('JAVASCRIPT_BIN_DIR', './node_modules/.bin')
+
+PACKAGE_FILE = {
+  ruby: './Gemfile.lock',
+  elixir: './mix.exs',
+  javascript: './package.json'
+}.freeze
+
+USAGE_MESSAGE = 'Usage: orm COMMAND'
+
+def config
+  @config ||= YAML.load_file(CONFIG_FILE) if File.exist?(CONFIG_FILE)
+end
+
+def lang
+  @lang ||= PACKAGE_FILE.keys.detect { |lang| PACKAGE_FILE[lang] && File.exist?(PACKAGE_FILE[lang]) }
+end
+
+def package(packages)
+  packages.detect { |package| !File.readlines(PACKAGE_FILE[lang]).grep(Regexp.new(package)).empty? }
+end
+
+def orm_command(command)
+  lang_packages = config.fetch(lang.to_s, {})
+  package = package(lang_packages.keys)
+  lang_packages.dig(package, command)
+end
+
+def execute(orm_command, args)
+  orm_command.tap do |command|
+    command = "#{JAVASCRIPT_BIN_DIR}/#{orm_command}" if lang == :javascript
+    command = "#{command} #{args}"
+
+    puts command
+    system(command)
+  end
+end
+
+command, *args = ARGV
+
+unless command
+  puts USAGE_MESSAGE
+  exit
+end
+raise "Config #{config} not found!" unless config
+raise "Language is not detected!" unless lang
+
+orm_command = orm_command(command)
+orm_command ? execute(orm_command, args.join(' ')) : raise("Command '#{command}' not found!")
