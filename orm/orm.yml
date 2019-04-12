@@ -9,6 +9,7 @@ elixir:
     status: mix ecto.migrations
 javascript:
   knex:
+    generate: knex migrate:make
     migrate: knex migrate:latest
     rollback: knex migrate:rollback
     seed: knex seed:run
@@ -20,10 +21,11 @@ javascript:
     migrate: sequelize db:migrate
     rollback: sequelize db:migrate:undo:all
     seed: sequelize db:seed:all
-    seed: sequelize db:seed:undo
+    reset: sequelize db:seed:undo
     status: sequelize db:migrate:status
 ruby:
   activerecord:
+    generate: rails g migration
     create: rake db:create
     drop: rake db:drop
     migrate: rake db:migrate
