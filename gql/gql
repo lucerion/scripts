@@ -1,0 +1,9 @@
+#!/usr/bin/env sh
+
+URL=$1
+FILE=$2
+USAGE="Usage: gql URL FILE"
+
+([ -z "$URL" ] || [ -z "$FILE" ]) && echo $USAGE && exit
+
+curl -s -H "Content-Type: text/xml" -d @$(realpath $FILE) $URL | jq
