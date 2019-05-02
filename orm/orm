@@ -19,17 +19,30 @@ def config
   @config ||= YAML.load_file(CONFIG_FILE) if File.exist?(CONFIG_FILE)
 end
 
-def lang
-  @lang ||= PACKAGE_FILE.keys.detect { |lang| PACKAGE_FILE[lang] && File.exist?(PACKAGE_FILE[lang]) }
+def langs
+  @langs ||= PACKAGE_FILE.keys.select(&method(:package_file_exist?))
 end
 
-def package(packages)
-  packages.detect { |package| !File.readlines(PACKAGE_FILE[lang]).grep(Regexp.new(package)).empty? }
+def lang
+  @lang ||= config.each_with_object({}) { |(lang, lang_packages), acc| acc[lang] = lang_packages.keys }
+                  .detect { |(lang, lang_packages)| lang if package(lang, lang_packages) }
+                  .first
+end
+
+def package(lang, packages)
+  packages.detect do |package|
+    package_file_exist?(lang) && !File.readlines(PACKAGE_FILE[lang.to_sym]).grep(Regexp.new(package)).empty?
+  end
+end
+
+def package_file_exist?(lang)
+  package_file = PACKAGE_FILE[lang.to_sym]
+  package_file && File.exist?(package_file)
 end
 
 def orm_command(command)
   lang_packages = config.fetch(lang.to_s, {})
-  package = package(lang_packages.keys)
+  package = package(lang, lang_packages.keys)
   lang_packages.dig(package, command)
 end
 
