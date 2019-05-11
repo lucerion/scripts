@@ -31,7 +31,7 @@ def parse_options!(args = ARGV)
 end
 
 def target_dir?(path)
-  Regexp.new(File.expand_path(path)) =~ CURRENT_DIR
+  File.expand_path(path) == CURRENT_DIR
 end
 
 def exec_command(command)
