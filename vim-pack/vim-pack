@@ -1,0 +1,38 @@
+#!/usr/bin/env ruby
+
+COMMANDS = {
+  add: 'add',
+  delete: 'del'
+}.freeze
+
+USAGE_MESSAGE = <<~USAGE
+  Usage: vim-pack add username/repository PACKAGE
+         vim-pack del PLUGIN
+USAGE
+
+MESSAGES = {
+  usage: USAGE_MESSAGE,
+  path: "Path is not correct"
+}
+
+GITHUB = "https://github.com"
+
+def validate(text = MESSAGES[:usage])
+  return yield if yield
+
+  puts text
+  exit
+end
+
+command, path, package = ARGV
+validate { command && path }
+
+case command
+when COMMANDS[:add]
+  validate { package }
+  plugin = validate(MESSAGES[:path]) { path.split('/')[1] }
+  package_directory = File.expand_path("~/.vim/pack/#{package}/start/#{plugin}")
+  `git submodule add #{GITHUB}/#{path} #{package_directory}`
+else
+  puts MESSAGES[:usage]
+end
