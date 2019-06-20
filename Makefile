@@ -16,18 +16,18 @@ endif
 CURRENT_SCRIPT = $(CURRENT_DIR)/$(SCRIPT)
 
 install:
-		mkdir -p $(BIN_DIR)
-		cp $(CURRENT_SCRIPT) $(BIN_DIR)
-		chmod u+x $(BIN_DIR)/$(SCRIPT)
+	mkdir -p $(BIN_DIR)
+	cp $(CURRENT_SCRIPT) $(BIN_DIR)
+	chmod u+x $(BIN_DIR)/$(SCRIPT)
 
 uninstall:
-		rm -f $(BIN_DIR)/$(SCRIPT)
+	rm -f $(BIN_DIR)/$(SCRIPT)
 
 config:
-		cp -i $(CURRENT_DIR)/$(SCRIPT_CONF) $(CONFIG_DIR)
+	cp -i $(CURRENT_DIR)/$(SCRIPT_CONF) $(CONFIG_DIR)
 
 purge: uninstall
-		rm -i $(CONFIG_DIR)/$(SCRIPT_CONF)
+	rm -i $(CONFIG_DIR)/$(SCRIPT_CONF)
 
 
 create_file:
