@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-DEFAULT_SHELL_CONFIG="$HOME/.bashrc"
+DEFAULT_SHELL_CONFIG="$HOME/.shrc.local"
 SHELL_CONFIG=${SHELL_CONFIG:-$DEFAULT_SHELL_CONFIG}
 
 for path in $@; do

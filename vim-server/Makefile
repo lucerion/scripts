@@ -2,15 +2,12 @@ SCRIPT = vim-server
 
 include ../Makefile
 
+ALIAS = vs
+
 VIFM_LOCAL_MAPPINGS = ~/.config/vifm/mappings.local
-ALIAS=vs
 
-export ALIASES_FILE = ${HOME}/.aliases.local
-
-setup:
+setup: add_alias
 		echo "nmap cs :term -e vim-server %f &<cr>" >> $(VIFM_LOCAL_MAPPINGS)
-		../als/als add $(ALIAS) $(SCRIPT)
 
-purge: uninstall
+purge: uninstall remove_alias
 		sed -i '/vim-server/d' $(VIFM_LOCAL_MAPPINGS)
-		../als/als del $(ALIAS)

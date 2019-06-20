@@ -9,11 +9,11 @@ SCRIPT := $(shell read -p "Script: " SCRIPT_NAME; echo $$SCRIPT_NAME)
 CURRENT_DIR = $(shell pwd)/$(SCRIPT)
 endif
 
-CURRENT_SCRIPT = $(CURRENT_DIR)/$(SCRIPT)
-
 ifndef SCRIPT_CONF
 SCRIPT_CONF = $(SCRIPT).yml
 endif
+
+CURRENT_SCRIPT = $(CURRENT_DIR)/$(SCRIPT)
 
 install:
 		mkdir -p $(BIN_DIR)
@@ -28,3 +28,13 @@ config:
 
 purge: uninstall
 		rm -i $(CONFIG_DIR)/$(SCRIPT_CONF)
+
+
+create_file:
+	if [ ! -f $(CREATE_FILE) ]; then echo "# vi: filetype=sh\n" >> $(CREATE_FILE); fi
+
+add_alias:
+	./als/als add $(ALIAS) $(SCRIPT)
+
+remove_alias:
+	./als/als del $(ALIAS)
