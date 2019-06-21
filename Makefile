@@ -9,10 +9,7 @@ SCRIPT := $(shell read -p "Script: " SCRIPT_NAME; echo $$SCRIPT_NAME)
 CURRENT_DIR = $(shell pwd)/$(SCRIPT)
 endif
 
-ifndef SCRIPT_CONF
 SCRIPT_CONF = $(SCRIPT).yml
-endif
-
 CURRENT_SCRIPT = $(CURRENT_DIR)/$(SCRIPT)
 
 install:
