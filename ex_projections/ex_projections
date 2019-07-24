@@ -1,17 +1,35 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require 'fileutils'
+require 'json'
 
-CONFIG_FILE = File.expand_path('~/.config/.projections.json')
+EXCLUDED_DIRS = %w[. ..].freeze
 
-unless File.exist?(CONFIG_FILE)
-  puts "Config '#{CONFIG_FILE}' not found!"
+PROJECT_TEMPLATE = {
+  'lib/*.ex' => { 'alternate': 'test/{}_test.exs' },
+  'test/*_test.exs' => { 'alternate': 'lib/{}.ex' }
+}.freeze
+
+def umbrella_template
+  (Dir.entries('./apps') - EXCLUDED_DIRS).each_with_object({}) do |dir, template|
+    template["apps/#{dir}/lib/*.ex"] = { 'alternate' => "apps/#{dir}/test/{}_test.exs" }
+    template["apps/#{dir}/test/*_test.exs"] = { 'alternate' => "apps/#{dir}/lib/{}.ex" }
+  end
+end
+
+def template
+  if Dir.exist?('./apps')
+    umbrella_template
+  elsif Dir.exist?('./lib')
+    PROJECT_TEMPLATE
+  else
+    {}
+  end
+end
+
+if template.empty?
+  puts 'Not an Elixir project'
   exit
 end
 
-if Dir.exist?('./apps')
-  (Dir.entries('./apps') - %w[. ..]).each { |dir| FileUtils.cp(CONFIG_FILE, "./apps/#{dir}") }
-elsif Dir.exist?('./lib')
-  FileUtils.cp(CONFIG_FILE, './')
-end
+File.open('.projections.json', 'w') { |file| file.write(JSON.pretty_generate(template)) }
