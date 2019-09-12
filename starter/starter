@@ -34,15 +34,18 @@ def target_dir?(path)
   File.expand_path(path) == CURRENT_DIR
 end
 
-def exec_command(command)
+def compose_command(command)
   case command
-  when String
-    exec command
-  when Array
-    exec command.join(' && ')
+  when String then command
+  when Array then command.join(' && ')
   end
 end
 
 YAML.load_file(parse_options![:config]).each do |path, command|
-  exec_command(command) if target_dir?(path)
+  next unless target_dir?(path)
+
+  compose_command(command).tap do |composed_command|
+    puts composed_command
+    exec composed_command
+  end
 end
