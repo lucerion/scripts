@@ -9,7 +9,7 @@ JAVASCRIPT_BIN_DIR = ENV.fetch('JAVASCRIPT_BIN_DIR', './node_modules/.bin')
 
 PACKAGE_FILE = {
   ruby: './Gemfile.lock',
-  elixir: './mix.exs',
+  elixir: './mix.lock',
   javascript: './package.json'
 }.freeze
 
