@@ -7,10 +7,16 @@ CONFIG_FILE = File.expand_path(ENV.fetch('CONFIG_FILE', '~/.config/orm.yml'))
 
 JAVASCRIPT_BIN_DIR = ENV.fetch('JAVASCRIPT_BIN_DIR', './node_modules/.bin')
 
-PACKAGE_FILE = {
-  ruby: './Gemfile.lock',
-  elixir: './mix.lock',
-  javascript: './package.json'
+PACKAGE_FILES = {
+  ruby: ['./Gemfile'],
+  elixir: ['./mix.exs', './apps/*/mix.exs'],
+  javascript: ['./package.json']
+}.freeze
+
+LOCK_FILES = {
+  ruby: ['./Gemfile.lock'],
+  elixir: ['./mix.lock'],
+  javascript: ['package-lock.json', './yarn.lock']
 }.freeze
 
 USAGE_MESSAGE = 'Usage: orm COMMAND'
@@ -19,40 +25,47 @@ def config
   @config ||= YAML.load_file(CONFIG_FILE) if File.exist?(CONFIG_FILE)
 end
 
-def langs
-  @langs ||= PACKAGE_FILE.keys.select(&method(:package_file_exist?))
-end
-
 def lang
-  @lang ||= config.each_with_object({}) { |(lang, lang_packages), acc| acc[lang] = lang_packages.keys }
-                  .detect { |(lang, lang_packages)| lang if package(lang, lang_packages) }
-                  .first
+  @lang ||= package_files.detect { |_lang, files| files.any?(&File.method(:exist?)) }&.first
 end
 
-def package(lang, packages)
-  packages.detect do |package|
-    package_file_exist?(lang) && !File.readlines(PACKAGE_FILE[lang.to_sym]).grep(Regexp.new(package)).empty?
+def package_files
+  @package_files ||= prepare_config(PACKAGE_FILES)
+end
+
+def lock_files
+  @lock_files ||= prepare_config(LOCK_FILES)
+end
+
+def prepare_config(config)
+  config.each_with_object({}) do |(lang, paths), prepared_config|
+    prepared_config[lang] = Dir.glob(paths).map(&File.method(:expand_path))
   end
 end
 
-def package_file_exist?(lang)
-  package_file = PACKAGE_FILE[lang.to_sym]
-  package_file && File.exist?(package_file)
+def files_contains?(files, word)
+  Array(files).any? do |file|
+    !File.readlines(file).grep(Regexp.new(word)).empty?
+  end
 end
 
-def orm_command(command)
-  lang_packages = config.fetch(lang.to_s, {})
-  package = package(lang, lang_packages.keys)
-  lang_packages.dig(package, command)
+def package_used?(package)
+  files_contains?(package_files[lang], package) || files_contains?(lock_files[lang], package)
 end
 
-def execute(orm_command, args)
-  orm_command.tap do |command|
-    command = "#{JAVASCRIPT_BIN_DIR}/#{orm_command}" if lang == :javascript
-    command = "#{command} #{args}"
+def orm_package
+  @orm_package ||= config.fetch(lang.to_s, {}).keys.detect(&method(:package_used?))
+end
 
-    puts command
-    system(command)
+def execute_command(command, args)
+  command_args = args.join(' ')
+
+  command.tap do |full_command|
+    full_command = "#{full_command} #{command_args}"
+    full_command = "#{JAVASCRIPT_BIN_DIR}/#{full_command}" if lang == :javascript
+
+    puts full_command
+    system(full_command)
   end
 end
 
@@ -62,8 +75,10 @@ unless command
   puts USAGE_MESSAGE
   exit
 end
-raise "Config #{config} not found!" unless config
-raise "Language is not detected!" unless lang
 
-orm_command = orm_command(command)
-orm_command ? execute(orm_command, args.join(' ')) : raise("Command '#{command}' not found!")
+raise "Config '#{config}' not found!" unless config
+raise 'Language is not detected!' unless lang
+raise 'ORM is not installed' unless orm_package
+
+orm_command = config.dig(lang.to_s, orm_package, command)
+orm_command ? execute_command(orm_command, args) : "Command '#{command}' not found!"
