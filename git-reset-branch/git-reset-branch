@@ -1,0 +1,10 @@
+#!/usr/bin/env sh
+
+DEFAULT_RESET_TO_BRANCH=master
+RESET_TO_BRANCH=${1:-$DEFAULT_RESET_BRANCH}
+CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+LAST_COMMIT_SHA=$(git rev-parse HEAD)
+
+git reset --hard origin/$RESET_TO_BRANCH
+git cherry-pick $LAST_COMMIT_SHA
+git push -f origin/$CURRENT_BRANCH
