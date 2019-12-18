@@ -1,0 +1,32 @@
+#!/usr/bin/env sh
+
+USAGE_MESSAGE="git-branch [recreate|reset]"
+
+CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+LAST_COMMIT_SHA=$(git rev-parse HEAD)
+
+RECREATE_BRANCH=${BRANCH:-$CURRENT_BRANCH}
+RANDOM_BRANCH_NAME=$(cat /dev/urandom | tr -dc '_A-Za-z0-9' | head -c 32)
+
+DEFAULT_RESET_TO_BRANCH=master
+RESET_TO_BRANCH=${BRANCH:-$DEFAULT_RESET_TO_BRANCH}
+
+recreate_branch() {
+  git checkout -b $RANDOM_BRANCH_NAME
+  git branch -D $RECREATE_BRANCH
+  git fetch --all
+  git checkout $RECREATE_BRANCH
+  git branch -D $RANDOM_BRANCH_NAME
+}
+
+reset_branch() {
+  git reset --hard origin/$RESET_TO_BRANCH
+  git cherry-pick $LAST_COMMIT_SHA && \
+  git push -f origin/$CURRENT_BRANCH
+}
+
+case $1 in
+  recreate) recreate_branch;;
+  reset) reset_branch;;
+  *) echo $USAGE_MESSAGE;;
+esac
