@@ -1,0 +1,26 @@
+#!/usr/bin/env sh
+
+USAGE_MESSAGE="installer path/to/package path/to/install"
+
+PACKAGE_PATH=$1
+INSTALL_DIR=$2
+
+if [ $# -ne 2 ]; then
+  echo $USAGE_MESSAGE
+  exit
+fi
+
+SRC_DIR=$INSTALL_DIR/src
+PACKAGE_NAME=$(basename $PACKAGE_PATH)
+
+mkdir -p $SRC_DIR
+cp -r $PACKAGE_PATH $SRC_DIR
+
+if [ -f $PACKAGE_PATH ]; then
+  ln -s $SRC_DIR/$PACKAGE_NAME $INSTALL_DIR
+  exit
+fi
+
+if [ -d $PACKAGE_PATH ]; then
+  ln -s $SRC_DIR/$PACKAGE_NAME/$PACKAGE_NAME $INSTALL_DIR
+fi
