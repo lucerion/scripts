@@ -25,7 +25,7 @@ MESSAGES = {
 }.freeze
 
 def options_parser(options = {})
-  OptionParser.new('open_vpn start|stop|restart|status DESTINATION [OPTION]') do |option|
+  OptionParser.new('Usage: open_vpn start|stop|restart|status DESTINATION [OPTION]') do |option|
     option.on('-c', '--config FILE', "config file. Default: #{DEFAULT_OPTIONS[:config]}") do |config_path|
       options[:config] = File.expand_path(config_path)
     end

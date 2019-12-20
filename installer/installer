@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-USAGE_MESSAGE="installer path/to/package path/to/install"
+USAGE_MESSAGE="Usage: installer path/to/package path/to/install"
 
 PACKAGE_PATH=$1
 INSTALL_DIR=$2

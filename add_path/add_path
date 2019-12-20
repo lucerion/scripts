@@ -1,5 +1,8 @@
 #!/usr/bin/env sh
 
+# Usage:
+#   add_path path/to/dir
+
 DEFAULT_SHELL_CONFIG="$HOME/.shrc.local"
 SHELL_CONFIG=${SHELL_CONFIG:-$DEFAULT_SHELL_CONFIG}
 
