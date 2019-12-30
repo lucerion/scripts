@@ -11,3 +11,9 @@ setup: add_alias
 
 purge: uninstall remove_alias
 	sed -i '/vim-server/d' $(VIFM_LOCAL_MAPPINGS)
+
+add_alias:
+	../als/als add $(ALIAS) $(shell pwd)/$(SCRIPT)
+
+remove_alias:
+	../als/als add $(ALIAS) $(shell pwd)/$(SCRIPT)

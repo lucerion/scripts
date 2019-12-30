@@ -28,9 +28,3 @@ purge: uninstall
 
 create_file:
 	if [ ! -f $(CREATE_FILE) ]; then echo "# vi: filetype=sh\n" >> $(CREATE_FILE); fi
-
-add_alias:
-	../als/als add $(ALIAS) $(SCRIPT)
-
-remove_alias:
-	../als/als del $(ALIAS)
