@@ -13,7 +13,7 @@ SCRIPT_CONF = $(SCRIPT).yml
 CURRENT_SCRIPT = $(CURRENT_DIR)/$(SCRIPT)
 
 install:
-	./installer/installer $(CURRENT_SCRIPT) $(BIN_DIR)
+	../installer/installer $(CURRENT_SCRIPT) $(BIN_DIR)
 
 uninstall:
 	rm -rf $(BIN_DIR)/packages/$(SCRIPT)
@@ -30,7 +30,7 @@ create_file:
 	if [ ! -f $(CREATE_FILE) ]; then echo "# vi: filetype=sh\n" >> $(CREATE_FILE); fi
 
 add_alias:
-	./als/als add $(ALIAS) $(SCRIPT)
+	../als/als add $(ALIAS) $(SCRIPT)
 
 remove_alias:
-	./als/als del $(ALIAS)
+	../als/als del $(ALIAS)
