@@ -16,8 +16,8 @@ install:
 	../installer/installer $(CURRENT_SCRIPT) $(BIN_DIR)
 
 uninstall:
-	rm -rf $(BIN_DIR)/packages/$(SCRIPT)
-	rm -f $(BIN_DIR)/$(SCRIPT)
+	rm -i $(BIN_DIR)/$(SCRIPT)
+	rm -ri $(BIN_DIR)/src/$(SCRIPT)
 
 config:
 	cp -i $(CURRENT_DIR)/$(SCRIPT_CONF) $(CONFIG_DIR)
