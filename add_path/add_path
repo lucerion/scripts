@@ -1,10 +1,23 @@
 #!/usr/bin/env sh
 
-# Usage:
-#   add_path path/to/dir
+USAGE="Usage: add_path path/to/dir"
 
-DEFAULT_SHELL_CONFIG="$HOME/.shrc.local"
-SHELL_CONFIG=${SHELL_CONFIG:-$DEFAULT_SHELL_CONFIG}
+CURRENT_SHELL=$(basename $SHELL)
+
+([ -z "$1" ] || [ ! -d "$1" ]) && echo $USAGE && exit
+
+case $CURRENT_SHELL in
+  zsh)
+    SHELL_CONFIG="$HOME/.zshrc"
+  ;;
+  bash)
+    SHELL_CONFIG="$HOME/.bashrc"
+  ;;
+  *)
+    [ -z "$SHELL_CONFIG" ] && echo "'$CURRENT_SHELL' is not supported" && exit
+    [ ! -f "$SHELL_CONFIG" ] && echo "'$SHELL_CONFIG' not found" && exit
+  ;;
+esac
 
 for path in $@; do
   echo "$path" |
