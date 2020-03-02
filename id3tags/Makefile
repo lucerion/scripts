@@ -2,5 +2,5 @@ SCRIPT = id3tags
 
 include ../Makefile
 
-dependencies:
+deps:
 	sudo apt-get install id3v2

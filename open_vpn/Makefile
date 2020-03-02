@@ -2,5 +2,5 @@ SCRIPT = open_vpn
 
 include ../Makefile
 
-dependencies:
+deps:
 	sudo apt-get install openvpn

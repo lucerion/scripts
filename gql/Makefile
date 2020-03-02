@@ -2,5 +2,5 @@ SCRIPT = gql
 
 include ../Makefile
 
-dependencies:
+deps:
 	sudo apt-get install jq
