@@ -24,7 +24,3 @@ config:
 
 purge: uninstall
 	rm -i $(CONFIG_DIR)/$(SCRIPT_CONF)
-
-
-create_file:
-	if [ ! -f $(CREATE_FILE) ]; then echo "# vi: filetype=sh\n" >> $(CREATE_FILE); fi

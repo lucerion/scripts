@@ -1,12 +1,15 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-ALIASES_FILE = File.expand_path(ENV.fetch('ALIASES_FILE', '~/.aliases.local'))
-
 COMMANDS = {
   add: 'add',
   delete: 'del',
   change: 'chg'
+}.freeze
+
+SHELL_BIN = {
+  'zsh' => '~/.zshrc',
+  'bash' => '~/.bashrc'
 }.freeze
 
 USAGE_MESSAGE = <<~USAGE
@@ -14,26 +17,43 @@ USAGE_MESSAGE = <<~USAGE
          als del name
 USAGE
 
-def add_alias(name)
+def add_alias(name, aliases_file)
   value = ARGV[2..-1].join(' ')
-  File.open(ALIASES_FILE, 'a') { |file| file.puts "alias #{name}='#{value}'" }
+  File.open(aliases_file, 'a') { |file| file.puts "alias #{name}='#{value}'" }
 end
 
-def delete_alias(name)
-  lines = File.readlines(ALIASES_FILE).reject { |line| line.start_with?("alias #{name}=") }
-  File.open(ALIASES_FILE, 'w') { |file| file.write(lines.join) }
+def delete_alias(name, aliases_file)
+  lines = File.readlines(aliases_file).reject { |line| line.start_with?("alias #{name}=") }
+  File.open(aliases_file, 'w') { |file| file.write(lines.join) }
+end
+
+def aliases_file(path)
+  path && File.expand_path(path)
+end
+
+shell = ENV['SHELL'] && File.basename(ENV['SHELL'])
+aliases_file = aliases_file(SHELL_BIN[shell])
+unless File.exists?(aliases_file)
+  puts "Shell '#{shell}' is not supported"
+  exit
+end
+
+aliases_file = aliases_file(ENV['ALIASES_FILE'])
+unless File.exists?(aliases_file)
+  puts "'#{aliases_file}' not found"
+  exit
 end
 
 command, name = ARGV
 
 case command
 when COMMANDS[:add]
-  add_alias(name)
+  add_alias(name, aliases_file)
 when COMMANDS[:delete]
-  delete_alias(name)
+  delete_alias(name, aliases_file)
 when COMMANDS[:change]
-  delete_alias(name)
-  add_alias(name)
+  delete_alias(name, aliases_file)
+  add_alias(name, aliases_file)
 else
   puts USAGE_MESSAGE
 end
