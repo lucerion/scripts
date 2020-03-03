@@ -13,7 +13,9 @@ SCRIPT_CONF = $(SCRIPT).yml
 CURRENT_SCRIPT = $(CURRENT_DIR)/$(SCRIPT)
 
 install:
-	../installer/installer $(CURRENT_SCRIPT) $(BIN_DIR)
+	mkdir -p $(BIN_DIR)
+	cp $(CURRENT_SCRIPT) $(BIN_DIR)
+	chmod u+x $(BIN_DIR)/$(SCRIPT)
 
 uninstall:
 	rm -i $(BIN_DIR)/$(SCRIPT)
