@@ -33,14 +33,14 @@ end
 
 shell = ENV['SHELL'] && File.basename(ENV['SHELL'])
 aliases_file = aliases_file(SHELL_BIN[shell])
-unless File.exists?(aliases_file)
+unless aliases_file && File.exists?(aliases_file)
   puts "Shell '#{shell}' is not supported"
   exit
 end
 
 aliases_file = aliases_file(ENV['ALIASES_FILE'])
-unless File.exists?(aliases_file)
-  puts "'#{aliases_file}' not found"
+unless aliases_file && File.exists?(aliases_file)
+  puts "Aliases file not found"
   exit
 end
 
