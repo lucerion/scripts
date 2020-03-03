@@ -15,7 +15,7 @@ OPEN_IN_TAB_OPTION = '--remote-tab-silent'
 COMMAND = 'vim --servername %<server_name>s %<args>s'
 
 def options_parser(options = {})
-  OptionParser.new('Usage: vim-server [OPTION] [FILE...]') do |option|
+  OptionParser.new('Usage: vim-server [OPTIONS] [FILE...]') do |option|
     option.on('--interactive', 'interactive mode', "Default: #{DEFAULT_OPTIONS[:interactive]}") do |value|
       options[:interactive] = value
     end

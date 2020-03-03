@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-USAGE_MESSAGE="Usage: git-branch [recreate|reset]"
+USAGE_MESSAGE="Usage: git-branch {recreate|reset}"
 
 CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
 LAST_COMMIT_SHA=$(git rev-parse HEAD)

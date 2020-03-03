@@ -10,7 +10,7 @@ DEFAULT_OPTIONS = {
 CURRENT_DIR = Dir.pwd
 
 def options_parser(options)
-  OptionParser.new('Usage: start') do |option|
+  OptionParser.new('Usage: start [OPTION]') do |option|
     option.on('-c', '--config FILE', "config file. Default: #{DEFAULT_OPTIONS[:config]}") do |value|
       options[:config] = File.expand_path(value)
     end

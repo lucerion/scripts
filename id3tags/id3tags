@@ -16,12 +16,12 @@ OPTIONS = {
 }.freeze
 
 def options_parser(options = {})
-  OptionParser.new('Usage: id3tags [OPTION]') do |option|
+  OptionParser.new('Usage: id3tags [OPTIONS]') do |option|
     option.on('-c', '--change CONFIG_FILE', 'change tags config.',
               "Default: #{DEFAULT_OPTIONS[:config]}") do |path|
       options[:config] = File.expand_path(path)
     end
-    option.on('-d', '--delete [FILE...]', Array, 'delete tags for files.',
+    option.on('-d', '--delete FILE...', Array, 'delete tags for files.',
               'Should be separated by a comma: /path/to/file/1.mp3,/path/to/file/2.mp3') do |files|
       options[:files] = files
     end
