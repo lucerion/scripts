@@ -7,6 +7,8 @@ elixir:
     rollback: mix ecto.rollback
     seed: mix run ./priv/repo/seeds.exs
     status: mix ecto.migrations
+    setup: mix ecto.create && mix ecto.migrate
+    reset: mix ecto.drop && mix ecto.create && mix ecto.migrate
 javascript:
   knex:
     generate: knex migrate:make
