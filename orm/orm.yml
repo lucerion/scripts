@@ -25,12 +25,12 @@ javascript:
     status: sequelize db:migrate:status
 ruby:
   activerecord:
-    generate: rails g migration
-    create: rake db:create
-    drop: rake db:drop
-    migrate: rake db:migrate
-    rollback: rake db:rollback
-    seed: rake db:seed
-    reset: rake db:reset
-    setup: rake db:setup
-    status: rake db:migrate:status
+    generate: bundle exec rails g migration
+    create: bundle exec rake db:create
+    drop: bundle exec rake db:drop
+    migrate: bundle exec rake db:migrate
+    rollback: bundle exec rake db:rollback
+    seed: bundle exec rake db:seed
+    reset: bundle exec rake db:reset
+    setup: bundle exec rake db:setup
+    status: bundle exec rake db:migrate:status
