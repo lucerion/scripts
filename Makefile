@@ -12,14 +12,17 @@ endif
 SCRIPT_CONF = $(SCRIPT).yml
 CURRENT_SCRIPT = $(CURRENT_DIR)/$(SCRIPT)
 
-install:
+build:
+	[ -f $(CURRENT_SCRIPT).cr ] && crystal build $(CURRENT_SCRIPT).cr
+
+install: build
 	mkdir -p $(BIN_DIR)
 	cp $(CURRENT_SCRIPT) $(BIN_DIR)
-	chmod u+x $(BIN_DIR)/$(SCRIPT)
+	[ -f $(CURRENT_SCRIPT).cr ] && rm $(CURRENT_SCRIPT)
+	chmod u+x $(BIN_DIR)/$(CURRENT_SCRIPT)
 
 uninstall:
 	rm -i $(BIN_DIR)/$(SCRIPT)
-	rm -ri $(BIN_DIR)/src/$(SCRIPT)
 
 config:
 	cp -i $(CURRENT_DIR)/$(SCRIPT_CONF) $(CONFIG_DIR)
