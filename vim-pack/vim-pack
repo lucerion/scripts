@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
 
 COMMANDS = {
   add: 'add',
@@ -12,10 +13,10 @@ USAGE
 
 MESSAGES = {
   usage: USAGE_MESSAGE,
-  path: "Path is not correct"
-}
+  path: 'Path is not correct'
+}.freeze
 
-GITHUB = "https://github.com"
+GITHUB = 'https://github.com'
 
 def validate(text = MESSAGES[:usage])
   return yield if yield
