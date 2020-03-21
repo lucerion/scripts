@@ -1,0 +1,6 @@
+# - name: project-0
+#   path: /path/to/project-0/dir
+#   groups: group-0
+# - name: project-1
+#   path: /path/to/project-1/dir
+#   groups: [group-0, group-1]

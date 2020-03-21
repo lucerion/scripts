@@ -1,0 +1,3 @@
+SCRIPT = linker
+
+include ../Makefile
