@@ -6,7 +6,7 @@ module OpenVPN
       @vpn_config : String
       @pid_file : String
 
-      def initialize(@options : OpenVPN::Options, @config : Hash(String, String))
+      def initialize(@options : Options, @config : Hash(String, String))
         @vpn_config = @config[@options.destination]
         @pid_file = "/var/run/open_vpn.#{@options.destination}.pid"
       end

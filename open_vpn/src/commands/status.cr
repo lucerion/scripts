@@ -4,8 +4,7 @@ module OpenVPN
   module Commands
     class Status < Command
       def run
-        message = ran? ? "OpenVPN is running" : "OpenVPN is not running"
-        puts message
+        puts ran? ? "OpenVPN is running" : "OpenVPN is not running"
       end
     end
   end

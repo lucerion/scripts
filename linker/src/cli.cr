@@ -18,9 +18,9 @@ module Linker
     USAGE
 
     COMMANDS = {
-      "link"   => Linker::Commands::Link,
-      "list"   => Linker::Commands::List,
-      "groups" => Linker::Commands::Groups,
+      "link"   => Commands::Link,
+      "list"   => Commands::List,
+      "groups" => Commands::Groups,
     }
 
     def initialize
@@ -40,11 +40,11 @@ module Linker
     private def options_parser
       OptionParser.new do |option|
         option.banner = USAGE_MESSAGE
-        option.on("-c", "--config FILE", "config file. Default: #{Linker::Options::DEFAULT_CONFIG}") do |value|
+        option.on("-c", "--config FILE", "config file. Default: #{Options::DEFAULT_CONFIG}") do |value|
           @options.config = value
         end
         option.on("-d", "--destination DIR",
-          "destination directory. Default: #{Linker::Options::DEFAULT_DESTINATION}") do |value|
+          "destination directory. Default: #{Options::DEFAULT_DESTINATION}") do |value|
           @options.destination = value
         end
         option.on("--help", "display a usage message") do

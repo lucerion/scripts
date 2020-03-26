@@ -4,13 +4,13 @@ require "../config"
 module Linker
   module Commands
     abstract class Command
-      def initialize(@options : Linker::Options)
+      def initialize(@options : Options)
       end
 
       abstract def run
 
       protected def config
-        Linker::Config.parse(@options.config)
+        Config.parse(@options.config)
       end
 
       protected def print_line(label, value, offset = "\t")

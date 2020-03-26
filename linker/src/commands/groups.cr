@@ -16,7 +16,7 @@ module Linker
       end
 
       private def by_groups
-        config.each_with_object({} of String => Array(Linker::Config)) do |option, accumulator|
+        config.each_with_object({} of String => Array(Config)) do |option, accumulator|
           add_to_group(option.groups, accumulator, option)
         end
       end
@@ -30,7 +30,7 @@ module Linker
       end
 
       private def add_to_group(group : String, list, option)
-        list[group] ||= [] of Linker::Config
+        list[group] ||= [] of Config
         list[group] << option
       end
     end

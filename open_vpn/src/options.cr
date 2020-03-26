@@ -7,7 +7,7 @@ module OpenVPN
 
     setter config = DEFAULT_CONFIG
     setter bin = DEFAULT_BIN
-    property command = OpenVPN::Commands::Command
+    property command = Commands::Command
     property destination : String?
 
     def config

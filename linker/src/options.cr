@@ -7,7 +7,7 @@ module Linker
 
     setter config = DEFAULT_CONFIG
     setter destination = DEFAULT_DESTINATION
-    property command = Linker::Commands::Command
+    property command = Commands::Command
 
     def config
       File.expand_path(@config, home: true)

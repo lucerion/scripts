@@ -9,10 +9,10 @@ require "./commands/status"
 module OpenVPN
   class CLI
     COMMANDS = {
-      "start"   => OpenVPN::Commands::Start,
-      "stop"    => OpenVPN::Commands::Stop,
-      "restart" => OpenVPN::Commands::Restart,
-      "status"  => OpenVPN::Commands::Status,
+      "start"   => Commands::Start,
+      "stop"    => Commands::Stop,
+      "restart" => Commands::Restart,
+      "status"  => Commands::Status,
     }
 
     def self.run(args)
@@ -20,7 +20,7 @@ module OpenVPN
     end
 
     def initialize
-      @options = OpenVPN::Options.new
+      @options = Options.new
     end
 
     def run(args)
@@ -29,7 +29,7 @@ module OpenVPN
       raise "Config '#{@options.config}' not found!" unless File.exists?(@options.config)
       raise "Binary '#{@options.bin}' not found!" unless File.executable?(@options.bin)
 
-      config = OpenVPN::Config.parse!(@options.config)
+      config = Config.parse!(@options.config)
       raise "'#{@options.destination}' not found in '#{@options.config}'" unless config.has_key?(@options.destination)
 
       @options.command.new(@options, config).run
@@ -38,10 +38,10 @@ module OpenVPN
     private def options_parser
       OptionParser.new do |option|
         option.banner = "Usage: open_vpn {start|stop|restart|status} DESTINATION [OPTIONS]"
-        option.on("-c", "--config FILE", "config file. Default: #{OpenVPN::Options::DEFAULT_CONFIG}") do |value|
+        option.on("-c", "--config FILE", "config file. Default: #{Options::DEFAULT_CONFIG}") do |value|
           @options.config = value
         end
-        option.on("--bin FILE", "executable file. Default: #{OpenVPN::Options::DEFAULT_BIN}") do |value|
+        option.on("--bin FILE", "executable file. Default: #{Options::DEFAULT_BIN}") do |value|
           @options.bin = value
         end
         option.on("--help", "display a usage message") do
