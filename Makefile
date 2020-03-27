@@ -19,7 +19,7 @@ install: build
 	mkdir -p $(BIN_DIR)
 	cp $(CURRENT_SCRIPT) $(BIN_DIR)
 	[ -f $(CURRENT_SCRIPT).cr ] && rm $(CURRENT_SCRIPT)
-	chmod u+x $(BIN_DIR)/$(CURRENT_SCRIPT)
+	chmod u+x $(BIN_DIR)/$(SCRIPT)
 
 uninstall:
 	rm -i $(BIN_DIR)/$(SCRIPT)
