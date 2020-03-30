@@ -9,7 +9,7 @@ module VimServer
     end
 
     def one_server_mode?
-      @one_server_mode && files.one?
+      @one_server_mode
     end
   end
 end

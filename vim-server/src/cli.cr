@@ -27,7 +27,7 @@ module VimServer
     end
 
     private def print_menu(menu)
-      menu.entries = ["start new (default)"] + Server.list
+      menu.entries = Server.list.unshift("start new (default)")
       menu.print
     end
 
@@ -43,7 +43,7 @@ module VimServer
     end
 
     private def non_interactive_mode(args)
-      Server.new(Server.first).open(args) if @options.one_server_mode?
+      Server.new(Server.list.first).open(args) if @options.one_server_mode? && Server.list.one?
 
       server = Server.new(Menu.new.input("Server name: "))
       server.exists? ? server.open(args) : server.start(args)

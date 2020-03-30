@@ -4,10 +4,6 @@ module VimServer
       `vim --serverlist`.split("\n").reject! { |name| name.empty? }
     end
 
-    def self.first
-      list.first
-    end
-
     def initialize(@server_name : String)
     end
 
