@@ -9,11 +9,11 @@ module Linker
     setter destination = DEFAULT_DESTINATION
     property command = Commands::Command
 
-    def config
+    def config : String
       File.expand_path(@config, home: true)
     end
 
-    def destination
+    def destination : String
       File.expand_path(@destination, home: true)
     end
   end

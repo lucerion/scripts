@@ -10,7 +10,7 @@ module Linker
     getter path : String
     getter groups : GroupOption?
 
-    def self.parse(path)
+    def self.parse(path : String) : Array(self)
       Array(self).from_yaml(File.read(path))
     end
   end

@@ -6,6 +6,8 @@ require "./commands/groups"
 
 module Linker
   class CLI
+    alias Args = Array(String)
+
     USAGE_MESSAGE = <<-USAGE
       Usage: linker COMMAND [OPTIONS]
 
@@ -27,17 +29,17 @@ module Linker
       @options = Linker::Options.new
     end
 
-    def self.run(args)
+    def self.run(args : Args)
       new.run(args)
     end
 
-    def run(args)
+    def run(args : Args)
       options_parser.parse(args)
       raise "Config file '#{@options.config}' not found!" unless File.exists?(@options.config)
       @options.command.new(@options).run
     end
 
-    private def options_parser
+    private def options_parser : OptionParser
       OptionParser.new do |option|
         option.banner = USAGE_MESSAGE
         option.on("-c", "--config FILE", "config file. Default: #{Options::DEFAULT_CONFIG}") do |value|

@@ -1,13 +1,13 @@
 require "yaml"
 
 module OpenVPN
-  class Config
-    def self.parse!(path)
-      new.parse!(path)
+  class Config < Hash(String, String)
+    def self.from_yaml(yaml : String) : self
+      new.from_yaml(yaml)
     end
 
-    def parse!(path)
-      YAML.parse(File.read(path)).as_h.each_with_object({} of String => String) do |(name_node, path_node), accumulator|
+    def from_yaml(yaml : String) : self
+      YAML.parse(yaml).as_h.each_with_object(self) do |(name_node, path_node), accumulator|
         name = name_node.as_s
         path = File.expand_path(path_node.as_s, home: true)
 

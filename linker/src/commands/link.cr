@@ -14,19 +14,19 @@ module Linker
         end
       end
 
-      private def link(path, destination_dir)
+      private def link(path : String, destination_dir : String)
         FileUtils.mkdir_p(destination_dir) unless Dir.exists?(destination_dir)
         FileUtils.ln_s(path, destination_dir) if Dir.exists?(path)
       end
 
-      private def link_by_group(group : Nil, path)
+      private def link_by_group(group : Nil, path : String)
       end
 
-      private def link_by_group(group : String, path)
+      private def link_by_group(group : String, path : String)
         link(path, "#{@options.destination}/#{group}")
       end
 
-      private def link_by_group(groups : Array(String), path)
+      private def link_by_group(groups : Array(String), path : String)
         groups.each { |group| link_by_group(group, path) }
       end
     end

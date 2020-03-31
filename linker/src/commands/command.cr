@@ -9,11 +9,11 @@ module Linker
 
       abstract def run
 
-      protected def config
+      protected def config : Array(Config)
         Config.parse(@options.config)
       end
 
-      protected def print_line(label, value, offset = "\t")
+      protected def print_line(label : String, value : String | Nil, offset = "\t")
         puts "#{offset}#{label}: #{value}"
       end
     end

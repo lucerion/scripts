@@ -10,11 +10,11 @@ module OpenVPN
     property command = Commands::Command
     property destination : String?
 
-    def config
+    def config : String
       File.expand_path(@config, home: true)
     end
 
-    def bin
+    def bin : String
       File.expand_path(@bin, home: true)
     end
   end

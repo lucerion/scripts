@@ -8,6 +8,8 @@ require "./commands/status"
 
 module OpenVPN
   class CLI
+    alias Args = Array(String)
+
     COMMANDS = {
       "start"   => Commands::Start,
       "stop"    => Commands::Stop,
@@ -15,7 +17,7 @@ module OpenVPN
       "status"  => Commands::Status,
     }
 
-    def self.run(args)
+    def self.run(args : Args)
       new.run(args)
     end
 
@@ -23,19 +25,19 @@ module OpenVPN
       @options = Options.new
     end
 
-    def run(args)
+    def run(args : Args)
       options_parser.parse(args)
 
       raise "Config '#{@options.config}' not found!" unless File.exists?(@options.config)
       raise "Binary '#{@options.bin}' not found!" unless File.executable?(@options.bin)
 
-      config = Config.parse!(@options.config)
+      config = Config.from_yaml(File.read(@options.config))
       raise "'#{@options.destination}' not found in '#{@options.config}'" unless config.has_key?(@options.destination)
 
       @options.command.new(@options, config).run
     end
 
-    private def options_parser
+    private def options_parser : OptionParser
       OptionParser.new do |option|
         option.banner = "Usage: open_vpn {start|stop|restart|status} DESTINATION [OPTIONS]"
         option.on("-c", "--config FILE", "config file. Default: #{Options::DEFAULT_CONFIG}") do |value|
