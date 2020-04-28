@@ -4,20 +4,24 @@ USAGE="Usage: add_path path/to/dir..."
 
 CURRENT_SHELL=$(basename $SHELL)
 
-([ -z "$1" ] || [ ! -d "$1" ]) && echo $USAGE && exit
+[ -z "$1" ] && echo $USAGE && exit
 
-case $CURRENT_SHELL in
-  zsh)
-    SHELL_CONFIG="$HOME/.zshrc"
-  ;;
-  bash)
-    SHELL_CONFIG="$HOME/.bashrc"
-  ;;
-  *)
-    [ -z "$SHELL_CONFIG" ] && echo "'$CURRENT_SHELL' is not supported" && exit
-    [ ! -f "$SHELL_CONFIG" ] && echo "'$SHELL_CONFIG' not found" && exit
-  ;;
-esac
+if [ -z "$SHELL_CONFIG" ]; then
+  case $CURRENT_SHELL in
+    zsh)
+      SHELL_CONFIG="$HOME/.zshrc"
+    ;;
+    bash)
+      SHELL_CONFIG="$HOME/.bashrc"
+    ;;
+    *)
+      echo "'$CURRENT_SHELL' is not supported"
+      exit
+    ;;
+  esac
+fi
+
+[ ! -f "$SHELL_CONFIG" ] && touch $SHELL_CONFIG
 
 for path in $@; do
   echo "$path" |
