@@ -1,13 +1,15 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
+require 'fileutils'
+
 COMMANDS = {
   add: 'add',
   delete: 'del',
   change: 'chg'
 }.freeze
 
-SHELL_BIN = {
+SHELL_CONFIGS = {
   'zsh' => '~/.zshrc',
   'bash' => '~/.bashrc'
 }.freeze
@@ -31,18 +33,18 @@ def aliases_file(path)
   path && File.expand_path(path)
 end
 
-shell = ENV['SHELL'] && File.basename(ENV['SHELL'])
-aliases_file = aliases_file(SHELL_BIN[shell])
-unless aliases_file && File.exist?(aliases_file)
-  puts "Shell '#{shell}' is not supported"
-  exit
+def shell_config
+  shell = ENV['SHELL'] && File.basename(ENV['SHELL'])
+  aliases_file(SHELL_CONFIGS[shell]).tap do |shell_config|
+    unless shell_config
+      puts "Shell '#{shell}' is not supported"
+      exit
+    end
+  end
 end
 
-aliases_file = aliases_file(ENV['ALIASES_FILE'])
-unless aliases_file && File.exist?(aliases_file)
-  puts 'Aliases file not found'
-  exit
-end
+aliases_file = ENV['ALIASES_FILE'] ? aliases_file(ENV['ALIASES_FILE']) : shell_config
+FileUtils.touch(aliases_file) unless aliases_file && File.exist?(aliases_file)
 
 command, name = ARGV
 
