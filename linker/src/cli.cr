@@ -13,6 +13,7 @@ module Linker
 
       Commands:
         link                  link projects
+        link groups           link by groups only
         list                  list of projects
         groups                list of projects by groups
         groups list           list of groups

@@ -4,13 +4,23 @@ require "./command"
 module Linker
   module Commands
     class Link < Command
+      SUBCOMMANDS = {
+        groups: "groups"
+      }
+
       def run
+        if !options.command_args.empty? && options.command_args.first != SUBCOMMANDS[:groups]
+          puts "Command '#{options.command_args.first}' not found"
+          exit
+        end
+
         config.each do |option|
           path = File.expand_path(option.path, home: true)
 
-          link(path, options.destination)
-
           link_by_group(option.groups, path)
+
+          next if !options.command_args.empty? && options.command_args.first == SUBCOMMANDS[:groups]
+          link(path, options.destination)
         end
       end
 
