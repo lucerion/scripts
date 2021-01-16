@@ -56,6 +56,11 @@ module Linker
           exit
         end
         option.unknown_args do |args|
+          if args.empty?
+            @options.command = COMMANDS["link"]
+            next
+          end
+
           if args.size >= 1 && COMMANDS.keys.includes?(args.first)
             @options.command = COMMANDS[args.first]
             @options.command_args = args[1..-1] if args.size >= 2
