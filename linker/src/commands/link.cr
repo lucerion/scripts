@@ -8,7 +8,7 @@ module Linker
         config.each do |option|
           path = File.expand_path(option.path, home: true)
 
-          link(path, @options.destination)
+          link(path, options.destination)
 
           link_by_group(option.groups, path)
         end
@@ -23,7 +23,7 @@ module Linker
       end
 
       private def link_by_group(group : String, path : String)
-        link(path, "#{@options.destination}/#{group}")
+        link(path, "#{options.destination}/#{group}")
       end
 
       private def link_by_group(groups : Array(String), path : String)

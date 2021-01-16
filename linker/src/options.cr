@@ -8,6 +8,7 @@ module Linker
     setter config = DEFAULT_CONFIG
     setter destination = DEFAULT_DESTINATION
     property command = Commands::Command
+    property command_args = [] of String
 
     def config : String
       File.expand_path(@config, home: true)

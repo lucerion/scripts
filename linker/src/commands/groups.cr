@@ -7,15 +7,41 @@ module Linker
       alias Configs = Array(Config)
       alias ConfigsDictionary = Hash(String, Configs)
 
+      SUBCOMMANDS = {
+        list: "list"
+      }
+
       def run
-        print(by_groups)
+        if options.command_args.empty?
+          print(by_groups)
+          exit
+        end
+
+        groups = by_groups.keys
+        group = options.command_args.first
+
+        if group == SUBCOMMANDS[:list]
+          groups.each { |group| puts group }
+          exit
+        end
+
+        unless groups.includes?(group)
+          puts "Group '#{group}' not found"
+          exit
+        end
+
+        print(by_groups[group], "")
       end
 
       private def print(groups : ConfigsDictionary)
         groups.each do |(group, options)|
           puts group
-          options.each { |option| print_line(option.name, option.path) }
+          print(options)
         end
+      end
+
+      private def print(options : Configs, offset = "\t")
+        options.each { |option| print_line(option.name, option.path, offset) }
       end
 
       private def by_groups : ConfigsDictionary

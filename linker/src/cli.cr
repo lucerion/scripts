@@ -12,9 +12,11 @@ module Linker
       Usage: linker COMMAND [OPTIONS]
 
       Commands:
-        link      link projects
-        list      list of projects
-        groups    list of projects by group
+        link                  link projects
+        list                  list of projects
+        groups                list of projects by groups
+        groups list           list of groups
+        groups <group name>   projects of group <group name>
 
       Options:
     USAGE
@@ -53,9 +55,10 @@ module Linker
           puts option
           exit
         end
-        option.unknown_args do |value|
-          if value.size == 1 && COMMANDS.keys.includes?(value.first)
-            @options.command = COMMANDS[value.first]
+        option.unknown_args do |args|
+          if args.size >= 1 && COMMANDS.keys.includes?(args.first)
+            @options.command = COMMANDS[args.first]
+            @options.command_args = args[1..-1] if args.size >= 2
             next
           end
 
