@@ -7,7 +7,7 @@ module OpenVPN
       def run
         return unless ran?
 
-        Process.kill(Signal.new(Signal::KILL), pid)
+        Process.signal(Signal.new(Signal::KILL), pid)
         FileUtils.rm(@pid_file)
       end
     end
