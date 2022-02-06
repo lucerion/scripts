@@ -17,6 +17,7 @@ SHELL_CONFIGS = {
 USAGE_MESSAGE = <<~USAGE
   Usage: als add name value
          als del name
+         als chg name value
 USAGE
 
 def add_alias(name, aliases_file)

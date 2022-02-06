@@ -1,3 +1,6 @@
+# programming_language:
+#   orm:
+#     alias: command
 elixir:
   ecto:
     generate: mix ecto.gen.migration

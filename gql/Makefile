@@ -3,4 +3,4 @@ SCRIPT = gql
 include ../Makefile
 
 deps:
-	sudo apt-get install jq
+	sudo apt-get install curl jq
