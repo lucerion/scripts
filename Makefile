@@ -13,12 +13,12 @@ SCRIPT_CONF = $(SCRIPT).yml
 CURRENT_SCRIPT = $(CURRENT_DIR)/$(SCRIPT)
 
 build:
-	[ -f $(CURRENT_SCRIPT).cr ] && crystal build $(CURRENT_SCRIPT).cr
+	if [ -f $(CURRENT_SCRIPT).cr ]; then crystal build $(CURRENT_SCRIPT).cr; fi
 
 install: build
 	mkdir -p $(BIN_DIR)
 	cp $(CURRENT_SCRIPT) $(BIN_DIR)
-	[ -f $(CURRENT_SCRIPT).cr ] && rm $(CURRENT_SCRIPT)
+	if [ -f $(CURRENT_SCRIPT).cr ]; then rm $(CURRENT_SCRIPT); fi
 	chmod u+x $(BIN_DIR)/$(SCRIPT)
 
 uninstall:
