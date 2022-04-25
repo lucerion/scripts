@@ -5,14 +5,39 @@ require 'optparse'
 require 'yaml'
 
 DEFAULT_OPTIONS = {
-  config: File.expand_path('~/.config/starter.yml')
+  config: '~/.config/starter.yml'
 }.freeze
+
 CURRENT_DIR = Dir.pwd
+
+STOP_SIGNALS = %w(TERM INT HUP USR1 USR2).freeze
+
+@pids = []
+
+def register_signals_handlers
+  STOP_SIGNALS.each do |signal_name|
+    trap(signal_name) do
+      @pids.each { |pid| kill_process(pid, signal_name) }
+    end
+  end
+end
+
+def kill_process(pid, signal_name)
+  Process.kill(signal_name, pid)
+  Process.detach(pid)
+end
+
+def process_alive?(pid)
+  Process.getpgid(pid)
+  true
+rescue Errno::ESRCH
+  false
+end
 
 def options_parser(options)
   OptionParser.new('Usage: start [OPTION]') do |option|
     option.on('-c', '--config FILE', "config file. Default: #{DEFAULT_OPTIONS[:config]}") do |value|
-      options[:config] = File.expand_path(value)
+      options[:config] = value
     end
     option.on_tail('--help', 'display a usage message') do
       puts option
@@ -24,8 +49,9 @@ end
 def parse_options!(args = ARGV)
   DEFAULT_OPTIONS.dup.tap do |options|
     options_parser(options).parse!(args)
-
+    options[:config] = File.expand_path(options[:config])
     config = options.fetch(:config)
+
     raise "Config '#{config}' not found" unless File.exist?(config)
   end
 end
@@ -36,16 +62,27 @@ end
 
 def compose_command(command)
   case command
-  when String then command
-  when Array then command.join(' && ')
+  when String then [command]
+  when Array then command
+  else []
   end
 end
+
+def execute_commands(commands)
+  @pids = compose_command(commands).map(&method(:execute_command))
+end
+
+def execute_command(command)
+  puts command
+  Process.spawn(command)
+end
+
+register_signals_handlers
 
 YAML.load_file(parse_options![:config]).each do |path, command|
   next unless target_dir?(path)
 
-  compose_command(command).tap do |composed_command|
-    puts composed_command
-    exec composed_command
-  end
+  execute_commands(command)
 end
+
+sleep 1 while @pids.all?(&method(:process_alive?))
