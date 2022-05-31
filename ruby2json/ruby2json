@@ -1,0 +1,13 @@
+#!/usr/bin/env ruby
+
+require 'json'
+
+# Usage:
+#   ruby2json <file>
+#   cat <file> | ruby2json
+#   echo <string> | ruby2json
+#   ruby2json (enter Ctrl+D to finish)
+
+content = ARGF.read
+hash = eval(content)
+print JSON.pretty_generate(hash)
