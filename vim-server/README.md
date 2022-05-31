@@ -11,3 +11,8 @@ vim-server [OPTIONS] [FILE...]
   --one-server    connect automatically if only one server runned. It's not allowed in 'interactive' mode
   --help          display a usage message
 ```
+
+
+## Dependencies
+
+* [vim](https://www.vim.org)

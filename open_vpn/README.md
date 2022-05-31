@@ -16,3 +16,8 @@ Usage: open_vpn {start|stop|restart|status} DESTINATION [OPTIONS]
     --bin FILE                       executable file. Default: /usr/sbin/openvpn
     --help                           display a usage message
 ```
+
+
+## Dependencies
+
+* [openvpn2](https://openvpn.net)

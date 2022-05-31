@@ -1,6 +1,6 @@
 # add_path
 
-Adds executables directory to the $PATH.
+Adds executables directory to the `$PATH`.
 
 
 ## Configuration

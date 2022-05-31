@@ -17,3 +17,8 @@ id3tags [OPTIONS]
   --bin FILE                executable file. Default: /usr/bin/id3v2
   -h, --help                display a usage message
 ```
+
+
+## Dependencies
+
+* [id3v2](http://id3v2.sourceforge.net)

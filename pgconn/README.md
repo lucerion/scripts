@@ -15,3 +15,8 @@ pgconn DESTINATION [OPTION]
   -c, --config FILE   config file. Default: ~/.config/pgconn.yml
   --help              display a usage message
 ```
+
+
+## Dependencies
+
+* [postgresl](https://postgresql.org)

@@ -9,3 +9,9 @@ Vim (vim8, neovim) package manager.
 vim-pack add username/repository PACKAGE - add package
 vim-pack del PACKAGE                     - remove package
 ```
+
+
+## Dependencies
+
+* [vim8](https://www.vim.org)
+* [neovim](https://neovim.io)

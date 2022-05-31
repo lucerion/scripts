@@ -1,6 +1,6 @@
 # Scripts
 
-* [add_path](add_path) - adds executables directory to the $PATH
+* [add_path](add_path) - adds executables directory to the `$PATH`
 * [als](als) - shell aliases manager
 * [ex_projections](ex_projections) - Elixir apps [projection](https://github.com/tpope/vim-projectionist) file generator
 * [git-branch](git-branch) - helps work with git branches in one command
@@ -25,3 +25,10 @@ Copy `.env.example` to `.env` and edit it. Run `make <command>` in the root dire
 * `config` - copy config example (default path: `~/.config`, can be configured with `CONFIG_DIR` env variable)
 * `uninstall` - remove script only
 * `purge` - remove script and config
+
+
+## Development dependencies
+
+* [make](https://www.gnu.org/software/make)
+* [ruby](https://www.ruby-lang.org)
+* [crystal](https://crystal-lang.org)

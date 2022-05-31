@@ -12,3 +12,8 @@ Helps work with git branches in one command.
 ## Usage
 
 `git-branch {recreate|reset}`
+
+
+## Dependencies
+
+* [git](https://git-scm.com)
