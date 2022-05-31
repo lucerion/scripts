@@ -66,13 +66,7 @@ module VimServer
           exit
         end
         option.unknown_args do |value|
-          if value.size >= 1
-            @options.files = value
-            next
-          end
-
-          puts option
-          exit
+          @options.files = value.size == 0 ? [""] : value
         end
       end
     end
