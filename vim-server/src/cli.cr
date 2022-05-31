@@ -41,7 +41,7 @@ module VimServer
         index
       end
 
-      index == 1 ? nil : Server.list[index - 1]
+      index == 0 ? nil : Server.list[index - 1]
     end
 
     private def non_interactive_mode(args : Args)
