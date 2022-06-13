@@ -7,33 +7,47 @@ COMMANDS = {
 }.freeze
 
 USAGE_MESSAGE = <<~USAGE
-  Usage: vim-pack add username/repository PACKAGE
-         vim-pack del PACKAGE
+  Usage: vim-pack add PACKAGE username/repository
+                  del PACKAGE plugin
+                  del PACKAGE
 USAGE
-
-MESSAGES = {
-  usage: USAGE_MESSAGE,
-  path: 'Path is not correct'
-}.freeze
 
 GITHUB = 'https://github.com'
 
-def validate(text = MESSAGES[:usage])
-  return yield if yield
+command, package, plugin = ARGV
 
-  puts text
+unless COMMANDS.include?(command) || package
+  puts USAGE_MESSAGE
   exit
 end
 
-command, path, package = ARGV
-validate { command && path }
+def add_plugin(package, repo)
+  plugin = repo.split('/')[1]
+
+  unless plugin
+    puts "Repo '#{repo}' is not valid"
+    return
+  end
+
+  plugin_directory = File.expand_path("~/.vim/pack/#{package}/start/#{plugin}")
+  `git clone #{GITHUB}/#{repo} #{plugin_directory}`
+end
+
+def delete_plugin(package, plugin)
+  plugin_directory = File.expand_path("~/.vim/pack/#{package}/start/#{plugin}")
+  `rm -rf #{plugin_directory}`
+end
+
+def delete_package(package)
+  package_directory = File.expand_path("~/.vim/pack/#{package}")
+  `rm -rf #{package_directory}`
+end
 
 case command
 when COMMANDS[:add]
-  validate { package }
-  plugin = validate(MESSAGES[:path]) { path.split('/')[1] }
-  package_directory = File.expand_path("~/.vim/pack/#{package}/start/#{plugin}")
-  `git clone add #{GITHUB}/#{path} #{package_directory}`
+  add_plugin(package, plugin)
+when COMMANDS[:delete]
+  plugin ? delete_plugin(package, plugin) : delete_package(package)
 else
-  puts MESSAGES[:usage]
+  puts USAGE_MESSAGE
 end

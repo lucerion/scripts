@@ -6,8 +6,9 @@ Vim (vim8, neovim) package manager.
 ## Usage
 
 ```
-vim-pack add username/repository PACKAGE - add package
-vim-pack del PACKAGE                     - remove package
+Usage: vim-pack add PACKAGE username/repository
+                del PACKAGE plugin
+                del PACKAGE
 ```
 
 
