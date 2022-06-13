@@ -33,7 +33,7 @@ when COMMANDS[:add]
   validate { package }
   plugin = validate(MESSAGES[:path]) { path.split('/')[1] }
   package_directory = File.expand_path("~/.vim/pack/#{package}/start/#{plugin}")
-  `git submodule add #{GITHUB}/#{path} #{package_directory}`
+  `git clone add #{GITHUB}/#{path} #{package_directory}`
 else
   puts MESSAGES[:usage]
 end
