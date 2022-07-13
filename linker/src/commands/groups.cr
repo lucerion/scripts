@@ -8,7 +8,7 @@ module Linker
       alias ConfigsDictionary = Hash(String, Configs)
 
       SUBCOMMANDS = {
-        list: "list"
+        list: "list",
       }
 
       def run

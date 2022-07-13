@@ -21,7 +21,7 @@ USAGE_MESSAGE = <<~USAGE
 USAGE
 
 def add_alias(name, aliases_file)
-  value = ARGV[2..-1].join(' ')
+  value = ARGV[2..].join(' ')
   File.open(aliases_file, 'a') { |file| file.puts "alias #{name}='#{value}'" }
 end
 
@@ -35,7 +35,9 @@ def aliases_file(path)
 end
 
 def shell_config
-  shell = ENV['SHELL'] && File.basename(ENV['SHELL'])
+  current_shell = ENV['SHELL']
+  shell = current_shell && File.basename(current_shell)
+
   aliases_file(SHELL_CONFIGS[shell]).tap do |shell_config|
     unless shell_config
       puts "Shell '#{shell}' is not supported"

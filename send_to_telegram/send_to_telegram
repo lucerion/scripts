@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
 
 require 'net/http'
 require 'json'
@@ -7,7 +8,7 @@ ALLOWED_FILE_TYPES = {
   photo: ['image/jpeg', 'image/png', 'image/gif', 'image/webp'],
   audio: ['audio/mpeg'],
   video: ['video/mp4']
-}
+}.freeze
 
 TELEGRAM_ENDPOINT_URL = 'https://api.telegram.org/bot%<token>s/%<endpoint>s'
 
@@ -18,7 +19,7 @@ ENDPOINTS = {
   document: 'sendDocument',
   message: 'sendMessage',
   updates: 'getUpdates'
-}
+}.freeze
 
 def send_message(message)
   url = URI(format(TELEGRAM_ENDPOINT_URL, token: token, endpoint: ENDPOINTS[:message]))

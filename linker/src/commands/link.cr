@@ -5,7 +5,7 @@ module Linker
   module Commands
     class Link < Command
       SUBCOMMANDS = {
-        groups: "groups"
+        groups: "groups",
       }
 
       def run

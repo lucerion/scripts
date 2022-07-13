@@ -10,7 +10,7 @@ DEFAULT_OPTIONS = {
 
 CURRENT_DIR = Dir.pwd
 
-STOP_SIGNALS = %w(TERM INT HUP USR1 USR2).freeze
+STOP_SIGNALS = %w[TERM INT HUP USR1 USR2].freeze
 
 @pids = []
 
