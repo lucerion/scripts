@@ -12,8 +12,9 @@ See [config file](pgconn) example.
 
 ```
 pgconn DESTINATION [OPTION]
-  -c, --config FILE   config file. Default: ~/.config/pgconn.yml
-  --help              display a usage message
+    -c, --config FILE                config file. Default: /home/alexander/.config/pgconn.yml
+        --bin FILE                   executable file. Default: /usr/bin/psql
+        --help                       display a usage message
 ```
 
 

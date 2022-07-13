@@ -12,7 +12,7 @@ Send files and messages to [Telegram](https://telegram.org)
 
 ## Usage
 
-Send message (press `Ctrl-D` to send finish input)
+Send message (press `Ctrl-D` to finish input)
 
 `send_to_telegram`
 
