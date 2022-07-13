@@ -1,53 +1,80 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
+require 'uri'
+
 COMMANDS = {
   add: 'add',
-  delete: 'del'
+  delete: 'del',
+  submodule: 'sub'
 }.freeze
 
 USAGE_MESSAGE = <<~USAGE
-  Usage: vim-pack add PACKAGE username/repository
-                  del PACKAGE plugin
-                  del PACKAGE
+  Usage:
+
+  vim-pack add PACKAGE repository - add plugin by cloning repo
+           sub PACKAGE repository - add plugin as submodule
+           del PACKAGE plugin     - delete plugin
+           del PACKAGE            - delete package
 USAGE
 
 GITHUB = 'https://github.com'
 
-command, package, plugin = ARGV
-
-unless COMMANDS.include?(command) || package
-  puts USAGE_MESSAGE
-  exit
+def validate(command, package, _plugin)
+  unless COMMANDS.include?(command) || package
+    puts USAGE_MESSAGE
+    exit
+  end
 end
 
-def add_plugin(package, repo)
-  plugin = repo.split('/')[1]
-
-  unless plugin
-    puts "Repo '#{repo}' is not valid"
-    return
+def execute_command(command, package, plugin)
+  case command
+  when COMMANDS[:add]
+    clone_repo(package, plugin)
+  when COMMANDS[:submodule]
+    add_submodule(package, plugin)
+  when COMMANDS[:delete]
+    plugin ? delete_plugin(package, plugin) : delete_package(package)
+  else
+    puts USAGE_MESSAGE
   end
+end
 
-  plugin_directory = File.expand_path("~/.vim/pack/#{package}/start/#{plugin}")
-  `git clone #{GITHUB}/#{repo} #{plugin_directory}`
+def clone_repo(package, repo)
+  url = repo_url(repo)
+  plugin = plugin(url)
+  `git clone #{url} #{plugin_directory(package, plugin)}`
+end
+
+def add_submodule(package, repo)
+  url = repo_url(repo)
+  plugin = plugin(url)
+  `git submodule add #{url} #{plugin_directory(package, plugin)}`
 end
 
 def delete_plugin(package, plugin)
-  plugin_directory = File.expand_path("~/.vim/pack/#{package}/start/#{plugin}")
-  `rm -rf #{plugin_directory}`
+  `git rm -r #{plugin_directory(package, plugin)}`
 end
 
 def delete_package(package)
-  package_directory = File.expand_path("~/.vim/pack/#{package}")
-  `rm -rf #{package_directory}`
+  `git rm -r #{package_directory(package)}`
 end
 
-case command
-when COMMANDS[:add]
-  add_plugin(package, plugin)
-when COMMANDS[:delete]
-  plugin ? delete_plugin(package, plugin) : delete_package(package)
-else
-  puts USAGE_MESSAGE
+def repo_url(repo)
+  repo.start_with?('http') ? repo : "#{GITHUB}/#{repo}"
 end
+
+def plugin(url)
+  URI(url).path.split('/').last
+end
+
+def plugin_directory(package, plugin)
+  "#{package_directory(package)}/start/#{plugin}"
+end
+
+def package_directory(package)
+  ".vim/pack/#{package}"
+end
+
+validate(*ARGV)
+execute_command(*ARGV)
