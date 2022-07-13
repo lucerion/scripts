@@ -1,0 +1,81 @@
+#!/usr/bin/env ruby
+
+require 'net/http'
+require 'json'
+
+ALLOWED_FILE_TYPES = {
+  photo: ['image/jpeg', 'image/png', 'image/gif', 'image/webp'],
+  audio: ['audio/mpeg'],
+  video: ['video/mp4']
+}
+
+TELEGRAM_ENDPOINT_URL = 'https://api.telegram.org/bot%<token>s/%<endpoint>s'
+
+ENDPOINTS = {
+  photo: 'sendPhoto',
+  audio: 'sendAudio',
+  video: 'sendVideo',
+  document: 'sendDocument',
+  message: 'sendMessage',
+  updates: 'getUpdates'
+}
+
+def send_message(message)
+  url = URI(format(TELEGRAM_ENDPOINT_URL, token: token, endpoint: ENDPOINTS[:message]))
+
+  request = Net::HTTP::Post.new(url)
+  request.body = URI.encode_www_form(chat_id: chat_id, text: message)
+  Net::HTTP.start(url.hostname, url.port, use_ssl: true) { |http| http.request(request) }
+end
+
+def send_file(file)
+  file_path = File.expand_path(file)
+
+  case file_type(file_path)
+  when *ALLOWED_FILE_TYPES[:photo]
+    upload_file(file_path, :photo)
+  when *ALLOWED_FILE_TYPES[:audio]
+    upload_file(file_path, :audio)
+  when *ALLOWED_FILE_TYPES[:video]
+    upload_file(file_path, :video)
+  else
+    upload_file(file_path, :document)
+  end
+end
+
+def file_type(file_path)
+  `file -b --mime-type #{file_path}`.strip
+end
+
+def token
+  @token ||= ENV['TOKEN']
+end
+
+def chat_id
+  return ENV['USER_ID'] if ENV['USER_ID']
+
+  url = URI(format(TELEGRAM_ENDPOINT_URL, token: token, endpoint: ENDPOINTS[:updates]))
+  response = Net::HTTP.get_response(url)
+  message = JSON.parse(response.body).fetch('result').detect { |message| !user_id(message).nil? }
+  user_id(message)
+end
+
+def user_id(message)
+  message.dig('message', 'from', 'id')
+end
+
+def upload_file(file_path, file_type)
+  url = URI(format(TELEGRAM_ENDPOINT_URL, token: token, endpoint: ENDPOINTS[file_type]))
+  form_data = { 'chat_id' => chat_id.to_s, file_type.to_s => File.open(file_path) }
+
+  request = Net::HTTP::Post.new(url)
+  request.set_form(form_data, 'multipart/form-data')
+  Net::HTTP.start(url.hostname, url.port, use_ssl: true) { |http| http.request(request) }
+end
+
+if ARGV.empty?
+  send_message(ARGF.read)
+  exit
+end
+
+ARGV.each(&method(:send_file))

@@ -9,5 +9,5 @@ Ruby hash to json convertor.
 ruby2json <file>
 cat <file> | ruby2json
 echo <string> | ruby2json
-ruby2json (enter Ctrl+D to exit)
+ruby2json (enter Ctrl+D to finish input)
 ```

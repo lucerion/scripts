@@ -6,7 +6,7 @@ require 'json'
 #   ruby2json <file>
 #   cat <file> | ruby2json
 #   echo <string> | ruby2json
-#   ruby2json (enter Ctrl+D to exit)
+#   ruby2json (press Ctrl+D to finish input)
 
 content = ARGF.read
 hash = eval(content)
