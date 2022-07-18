@@ -12,6 +12,7 @@ See [config file](starter.yml) example.
 
 ```
 start [OPTION]
-  -c, --config FILE   config file. Default: ~/.config/starter.yml
-  --help              display a usage message
+
+    -c, --config FILE   config file. Default: ~/.config/starter.yml
+    --help              display a usage message
 ```

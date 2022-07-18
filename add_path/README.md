@@ -10,4 +10,4 @@ Adds executables directory to the `$PATH`.
 
 ## Usage
 
-`add_path path/to/bin/dir...`
+`add_path [PATH_TO_BIN_DIR...]`

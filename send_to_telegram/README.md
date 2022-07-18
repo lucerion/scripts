@@ -18,4 +18,4 @@ Send message (press `Ctrl-D` to finish input)
 
 Send file(s)
 
-`send_to_telegram /path/to/file/ path/to/second/file`
+`send_to_telegram [PATH_TO_FILE...]`

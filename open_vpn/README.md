@@ -11,10 +11,11 @@ See [config file](open_vpn.yml) example.
 ## Usage
 
 ```
-Usage: open_vpn {start|stop|restart|status} DESTINATION [OPTIONS]
-    -c, --config FILE                config file. Default: ~/.config/open_vpn.yml
-    --bin FILE                       executable file. Default: /usr/sbin/openvpn
-    --help                           display a usage message
+open_vpn {start|stop|restart|status} DESTINATION [OPTIONS]
+
+    -c, --config FILE   config file. Default: ~/.config/open_vpn.yml
+        --bin FILE      executable file. Default: /usr/sbin/openvpn
+        --help          display a usage message
 ```
 
 
