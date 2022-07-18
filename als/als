@@ -22,12 +22,12 @@ USAGE
 
 def add_alias(name, aliases_file)
   value = ARGV[2..].join(' ')
-  File.open(aliases_file, 'a') { |file| file.puts "alias #{name}='#{value}'" }
+  File.write(aliases_file, "alias #{name}='#{value}'", mode: 'a')
 end
 
 def delete_alias(name, aliases_file)
   lines = File.readlines(aliases_file).reject { |line| line.start_with?("alias #{name}=") }
-  File.open(aliases_file, 'w') { |file| file.write(lines.join) }
+  File.write(aliases_file, lines.join)
 end
 
 def aliases_file(path)
@@ -35,7 +35,7 @@ def aliases_file(path)
 end
 
 def shell_config
-  current_shell = ENV['SHELL']
+  current_shell = ENV.fetch('SHELL', nil)
   shell = current_shell && File.basename(current_shell)
 
   aliases_file(SHELL_CONFIGS[shell]).tap do |shell_config|

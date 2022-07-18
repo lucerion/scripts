@@ -6,8 +6,8 @@ require 'json'
 EXCLUDED_DIRS = %w[. ..].freeze
 
 PROJECT_TEMPLATE = {
-  'lib/*.ex' => { 'alternate': 'test/{}_test.exs' },
-  'test/*_test.exs' => { 'alternate': 'lib/{}.ex' }
+  'lib/*.ex' => { 'alternate' => 'test/{}_test.exs' },
+  'test/*_test.exs' => { 'alternate' => 'lib/{}.ex' }
 }.freeze
 
 def umbrella_template
@@ -32,4 +32,4 @@ if template.empty?
   exit
 end
 
-File.open('.projections.json', 'w') { |file| file.write(JSON.pretty_generate(template)) }
+File.write('.projections.json', JSON.pretty_generate(template))

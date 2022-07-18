@@ -49,15 +49,15 @@ def file_type(file_path)
 end
 
 def token
-  @token ||= ENV['TOKEN']
+  @token ||= ENV.fetch('TOKEN')
 end
 
 def chat_id
-  return ENV['USER_ID'] if ENV['USER_ID']
+  return ENV.fetch('USER_ID') if ENV.fetch('USER_ID')
 
   url = URI(format(TELEGRAM_ENDPOINT_URL, token: token, endpoint: ENDPOINTS[:updates]))
   response = Net::HTTP.get_response(url)
-  message = JSON.parse(response.body).fetch('result').detect { |message| !user_id(message).nil? }
+  message = JSON.parse(response.body).fetch('result').detect { |msg| !user_id(msg).nil? }
   user_id(message)
 end
 

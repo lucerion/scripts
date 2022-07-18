@@ -21,10 +21,10 @@ USAGE
 GITHUB = 'https://github.com'
 
 def validate(command, package, _plugin)
-  unless COMMANDS.include?(command) || package
-    puts USAGE_MESSAGE
-    exit
-  end
+  return if COMMANDS.include?(command) && package
+
+  puts USAGE_MESSAGE
+  exit
 end
 
 def execute_command(command, package, plugin)
