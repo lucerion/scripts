@@ -20,8 +20,11 @@ USAGE
 
 GITHUB = 'https://github.com'
 
-def validate(command, package, _plugin)
-  return if COMMANDS.include?(command) && package
+def validate(args)
+  command = args[0]
+  package = args[1]
+
+  return if COMMANDS.values.include?(command) && package
 
   puts USAGE_MESSAGE
   exit
@@ -76,5 +79,5 @@ def package_directory(package)
   ".vim/pack/#{package}"
 end
 
-validate(*ARGV)
+validate(ARGV)
 execute_command(*ARGV)
