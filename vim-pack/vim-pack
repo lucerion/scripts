@@ -2,11 +2,21 @@
 # frozen_string_literal: true
 
 require 'uri'
+require 'fileutils'
 
 COMMANDS = {
   add: 'add',
   delete: 'del',
-  submodule: 'sub'
+  submodule: 'sub',
+  disable: 'dis',
+  enable: 'enb',
+  status: 'sta'
+}.freeze
+
+STATUSES = {
+  enabled: 'enabled',
+  disabled: 'disabled',
+  not_installed: 'not installed'
 }.freeze
 
 USAGE_MESSAGE = <<~USAGE
@@ -16,6 +26,9 @@ USAGE_MESSAGE = <<~USAGE
            sub PACKAGE repository - add plugin as submodule
            del PACKAGE plugin     - delete plugin
            del PACKAGE            - delete package
+           dis PACKAGE plugin     - disable plugin
+           enb PACKAGE plugin     - enable plugin
+           sta PACKAGE plugin     - plugin status (enabled/disabled/not installed)
 USAGE
 
 GITHUB = 'https://github.com'
@@ -30,14 +43,20 @@ def validate(args)
   exit
 end
 
-def execute_command(command, package, plugin)
+def execute_command(command, package, repo)
   case command
   when COMMANDS[:add]
-    clone_repo(package, plugin)
+    clone_repo(package, repo)
   when COMMANDS[:submodule]
-    add_submodule(package, plugin)
+    add_submodule(package, repo)
   when COMMANDS[:delete]
-    plugin ? delete_plugin(package, plugin) : delete_package(package)
+    repo ? delete_plugin(package, repo) : delete_package(package)
+  when COMMANDS[:disable]
+    disable_plugin(package, repo)
+  when COMMANDS[:enable]
+    enable_plugin(package, repo)
+  when COMMANDS[:status]
+    plugin_status(package, repo)
   else
     puts USAGE_MESSAGE
   end
@@ -63,6 +82,24 @@ def delete_package(package)
   `git rm -r #{package_directory(package)}`
 end
 
+def disable_plugin(package, plugin)
+  return if plugin_disabled?(package, plugin)
+
+  FileUtils.mkdir_p(disabled_plugins_directory(package))
+  `git mv #{enabled_plugin(package, plugin)} #{disabled_plugin(package, plugin)}`
+end
+
+def enable_plugin(package, plugin)
+  return if plugin_enabled?(package, plugin)
+
+  FileUtils.mkdir_p(enabled_plugins_directory(package))
+  `git mv #{disabled_plugin(package, plugin)} #{enabled_plugin(package, plugin)}`
+end
+
+def plugin_status(package, plugin)
+  puts status(package, plugin)
+end
+
 def repo_url(repo)
   repo.start_with?('http') ? repo : "#{GITHUB}/#{repo}"
 end
@@ -77,6 +114,37 @@ end
 
 def package_directory(package)
   ".vim/pack/#{package}"
+end
+
+def enabled_plugin(package, plugin)
+  "#{enabled_plugins_directory(package)}/#{plugin}"
+end
+
+def disabled_plugin(package, plugin)
+  "#{disabled_plugins_directory(package)}/#{plugin}"
+end
+
+def enabled_plugins_directory(package)
+  "#{package_directory(package)}/start"
+end
+
+def disabled_plugins_directory(package)
+  "#{package_directory(package)}/opt"
+end
+
+def status(package, plugin)
+  return STATUSES[:enabled] if plugin_enabled?(package, plugin)
+  return STATUSES[:disabled] if plugin_disabled?(package, plugin)
+
+  STATUSES[:not_installed]
+end
+
+def plugin_enabled?(package, plugin)
+  Dir.exist?(enabled_plugin(package, plugin))
+end
+
+def plugin_disabled?(package, plugin)
+  Dir.exist?(disabled_plugin(package, plugin))
 end
 
 validate(ARGV)
