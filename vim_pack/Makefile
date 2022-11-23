@@ -1,3 +1,3 @@
-SCRIPT = vim-pack
+SCRIPT = vim_pack
 
 include ../Makefile

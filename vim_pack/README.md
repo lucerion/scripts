@@ -1,4 +1,4 @@
-# vim-pack
+# vim_pack
 
 Vim (vim8, neovim) package manager.
 
@@ -6,7 +6,7 @@ Vim (vim8, neovim) package manager.
 ## Usage
 
 ```
-vim-pack add PACKAGE repository - add plugin by cloning repo
+vim_pack add PACKAGE repository - add plugin by cloning repo
          sub PACKAGE repository - add plugin as submodule
          del PACKAGE plugin     - delete plugin
          del PACKAGE            - delete package

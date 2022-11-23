@@ -11,7 +11,7 @@
 * [ruby2json](ruby2json) - ruby hash to json convertor
 * [send_to_telegram](send_to_telegram) - send files and messages to [Telegram](https://telegram.org)
 * [starter](starter) - starts commands depending on the current directory path
-* [vim-pack](vim-pack) - Vim (vim8, neovim) package manager
+* [vim_pack](vim_pack) - Vim (vim8, neovim) package manager
 * [vim-server](vim-server) - open files in the one Vim instance
 
 
