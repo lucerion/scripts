@@ -53,7 +53,7 @@ module VimServer
 
     private def options_parser : OptionParser
       OptionParser.new do |option|
-        option.banner = "Usage: vim-server [OPTIONS] [FILE...]"
+        option.banner = "Usage: vim_server [OPTIONS] [FILE...]"
         option.on("--interactive", "interactive mode") do
           @options.interactive_mode = true
         end

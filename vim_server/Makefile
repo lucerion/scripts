@@ -1,3 +1,3 @@
-SCRIPT = vim-server
+SCRIPT = vim_server
 
 include ../Makefile

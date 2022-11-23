@@ -1,6 +1,6 @@
 # binaries
 linker/linker
 open_vpn/open_vpn
-vim-server/vim-server
+vim_server/vim_server
 
 .env
