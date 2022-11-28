@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/bin/sh
 
 USAGE="Usage: add_path path/to/bin/dir..."
 

@@ -1,6 +1,6 @@
 .DEFAULT_GOAL := install
 
-BIN_DIR ?= ~/.local/bin
+BIN_DIR ?= ~/bin
 CONFIG_DIR ?= ~/.config
 CURRENT_DIR = $(shell pwd)
 

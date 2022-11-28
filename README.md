@@ -20,7 +20,7 @@
 Copy `.env.example` to `.env` and edit it. Run `make <command>` in the root directory and then enter script name or
 `make <command>` in a script directory where `<command>`
 
-* `install` - copy script to user home binary directory (default path: `~/.local/bin`, can be configured with `BIN_DIR` env variable)
+* `install` - copy script to user home binary directory (default path: `~/bin`, can be configured with `BIN_DIR` env variable)
 * `config` - copy config example (default path: `~/.config`, can be configured with `CONFIG_DIR` env variable)
 * `uninstall` - remove script only
 * `purge` - remove script and config
