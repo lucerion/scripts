@@ -5,7 +5,7 @@ psql wrapper that connects to the PostgreSQL by configuration file
 
 ## Configuration
 
-See [config file](pgconn) example.
+See [config file](pgconn.yml) example.
 
 
 ## Usage
@@ -13,7 +13,7 @@ See [config file](pgconn) example.
 ```
 pgconn DESTINATION [OPTION]
 
-    -c, --config FILE   config file. Default: /home/alexander/.config/pgconn.yml
+    -c, --config FILE   config file. Default: ~/.config/pgconn.yml
         --bin FILE      executable file. Default: /usr/bin/psql
         --help          display a usage message
 ```
