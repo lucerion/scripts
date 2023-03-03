@@ -1,6 +1,6 @@
 # vim_server
 
-Open files in the one Vim instance.
+Opens files in the one Vim instance.
 
 
 ## Usage

@@ -9,10 +9,11 @@
 * [orm](orm) - aliases for the ORMs (ruby, javascript, elixir, ...) commands
 * [pgconn](pgconn) - psql wrapper that connects to the PostgreSQL by configuration file
 * [ruby2json](ruby2json) - ruby hash to json convertor
-* [send_to_telegram](send_to_telegram) - send files and messages to [Telegram](https://telegram.org)
+* [send_to_telegram](send_to_telegram) - sends files and messages to the [Telegram](https://telegram.org)
+* [send_to_google_drive](send_to_google_drive) - uploads files to the [Google Drive](https://drive.google.com)
 * [starter](starter) - starts commands depending on the current directory path
 * [vim_pack](vim_pack) - Vim (vim8, neovim) package manager
-* [vim_server](vim_server) - open files in the one Vim instance
+* [vim_server](vim_server) - opens files in the one Vim instance
 
 
 ## Installation

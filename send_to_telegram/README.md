@@ -1,6 +1,6 @@
 # send_to_telegram
 
-Send files and messages to [Telegram](https://telegram.org)
+Sends files and messages to the [Telegram](https://telegram.org)
 
 
 ## Configuration

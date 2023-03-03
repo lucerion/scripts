@@ -1,0 +1,32 @@
+#!/usr/bin/env ruby
+
+require 'google_drive'
+
+USAGE = "send_to_google_drive [PATH_TO_FILE...]"
+CONFIG_PATH = File.expand_path('~/.config/google_drive.json')
+
+if ARGV.empty?
+  puts USAGE
+  exit
+end
+
+unless File.exist?(CONFIG_PATH)
+  puts "Config '#{CONFIG_PATH}' not found!"
+  exit
+end
+
+session = nil
+ARGV.each do |file|
+  file_path = File.expand_path(file)
+  file_name = File.basename(file_path)
+
+  unless File.exist?(file_path)
+    puts "File '#{file}' not found!"
+    exit
+  end
+
+  session ||= GoogleDrive::Session.from_config(CONFIG_PATH)
+  uploaded_file = session.upload_from_file(file_path, file_name)
+  puts "#{file_name}\t#{uploaded_file.human_url}"
+end
+
