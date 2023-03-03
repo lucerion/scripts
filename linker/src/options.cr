@@ -2,7 +2,8 @@ require "./commands/command"
 
 module Linker
   class Options
-    DEFAULT_CONFIG      = "~/.config/linker.yml"
+    CONFIG_DIR = ENV.fetch("CONFIG_DIR", "~/.config")
+    DEFAULT_CONFIG = "#{CONFIG_DIR}/linker.yml"
     DEFAULT_DESTINATION = "."
 
     setter config = DEFAULT_CONFIG

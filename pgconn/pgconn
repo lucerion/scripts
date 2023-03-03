@@ -4,8 +4,10 @@
 require 'optparse'
 require 'yaml'
 
+CONFIG_DIR = ENV.fetch('CONFIG_DIR', '~/.config')
+
 DEFAULT_OPTIONS = {
-  config: File.expand_path('~/.config/pgconn.yml'),
+  config: File.expand_path("#{CONFIG_DIR}/pgconn.yml"),
   bin: '/usr/bin/psql'
 }.freeze
 

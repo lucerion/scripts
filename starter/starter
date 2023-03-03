@@ -4,8 +4,10 @@
 require 'optparse'
 require 'yaml'
 
+CONFIG_DIR = ENV.fetch('CONFIG_DIR', '~/.config')
+
 DEFAULT_OPTIONS = {
-  config: '~/.config/starter.yml'
+  config: "#{CONFIG_DIR}/starter.yml"
 }.freeze
 
 CURRENT_DIR = Dir.pwd

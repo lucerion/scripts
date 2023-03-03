@@ -4,8 +4,10 @@
 require 'optparse'
 require 'yaml'
 
+CONFIG_DIR = ENV.fetch('CONFIG_DIR', '~/.config')
+
 DEFAULT_OPTIONS = {
-  config: File.expand_path('./id3tags.yml'),
+  config: File.expand_path("#{CONFIG_DIR}/id3tags.yml"),
   bin: File.expand_path('/usr/bin/id3v2')
 }.freeze
 

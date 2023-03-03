@@ -3,7 +3,8 @@
 
 require 'yaml'
 
-CONFIG_FILE = File.expand_path(ENV.fetch('CONFIG_FILE', '~/.config/orm.yml'))
+CONFIG_DIR = ENV.fetch('CONFIG_DIR', '~/.config')
+CONFIG_FILE = File.expand_path("#{CONFIG_DIR}/orm.yml")
 
 JAVASCRIPT_BIN_DIR = ENV.fetch('JAVASCRIPT_BIN_DIR', './node_modules/.bin')
 

@@ -3,7 +3,9 @@
 require 'google_drive'
 
 USAGE = "send_to_google_drive [PATH_TO_FILE...]"
-CONFIG_PATH = File.expand_path('~/.config/google_drive.json')
+
+CONFIG_DIR = ENV.fetch('CONFIG_DIR', '~/.config')
+CONFIG_PATH = File.expand_path("#{CONFIG_DIR}/google_drive.json")
 
 if ARGV.empty?
   puts USAGE
