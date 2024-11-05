@@ -1,8 +1,9 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
 
 require 'google_drive'
 
-USAGE = "send_to_google_drive [PATH_TO_FILE...]"
+USAGE = 'send_to_google_drive [PATH_TO_FILE...]'
 
 CONFIG_DIR = ENV.fetch('CONFIG_DIR', '~/.config')
 CONFIG_PATH = File.expand_path("#{CONFIG_DIR}/google_drive.json")
@@ -31,4 +32,3 @@ ARGV.each do |file|
   uploaded_file = session.upload_from_file(file_path, file_name)
   puts "#{file_name}\t#{uploaded_file.human_url}"
 end
-

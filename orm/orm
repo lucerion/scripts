@@ -39,9 +39,7 @@ def lock_files
 end
 
 def prepare_config(config)
-  config.each_with_object({}) do |(lang, paths), prepared_config|
-    prepared_config[lang] = Dir.glob(paths).map(&File.method(:expand_path))
-  end
+  config.transform_values { |paths| Dir.glob(paths).map(&File.method(:expand_path)) }
 end
 
 def files_contains?(files, word)
