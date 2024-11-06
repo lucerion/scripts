@@ -19,7 +19,7 @@ OPTIONS = {
 
 def options_parser(options = {})
   OptionParser.new('Usage: id3tags [OPTIONS]') do |option|
-    option.on('-c', '--change CONFIG_FILE', 'change tags config.',
+    option.on('-c', '--config CONFIG_FILE', 'config.',
               "Default: #{DEFAULT_OPTIONS[:config]}") do |path|
       options[:config] = File.expand_path(path)
     end
