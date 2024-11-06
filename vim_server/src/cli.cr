@@ -45,7 +45,7 @@ module VimServer
     end
 
     private def non_interactive_mode(args : Args)
-      Server.new(Server.list.first).open(args) if @options.one_server_mode? && Server.list.one?
+      Server.new(Server.list.first).open(args) if @options.single_mode? && Server.list.one?
 
       server = Server.new(Menu.new.input("Server name: "))
       server.exists? ? server.open(args) : server.start(args)
@@ -57,9 +57,9 @@ module VimServer
         option.on("--interactive", "interactive mode") do
           @options.interactive_mode = true
         end
-        option.on("--one-server",
+        option.on("--single",
           "connect automatically if only one server runned. It's not allowed in 'interactive' mode.") do
-          @options.one_server_mode = true
+          @options.single_mode = true
         end
         option.on("--help", "display a usage message") do
           puts option

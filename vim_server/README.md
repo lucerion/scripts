@@ -8,7 +8,7 @@ Opens files in the single Vim instance.
 ```
 vim_server [OPTIONS] [FILE...]
     --interactive   interactive mode
-    --one-server    connect automatically if only one server runned. It's not allowed in 'interactive' mode
+    --single        connect automatically if only one server runned. It's not allowed in 'interactive' mode
     --help          display a usage message
 ```
 
